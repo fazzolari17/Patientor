@@ -1,0 +1,20 @@
+
+@personId = d2773336-f723-11e9-8f0b-362b9e155667
+
+GET http://localhost:3001/api/patients/d2773336-f723-11e9-8f0b-362b9e155667
+###
+GET http://localhost:3001/api/diagnoses
+###
+POST http://localhost:3001/api/patients/{{personId}}/entries
+Content-Type: application/json
+
+{
+  "date": "2022-11-29",
+  "type": "Hospital",
+  "specialist": "MD Dougie Howser",
+  "description": "NEW TEST",
+  "discharge": {
+    "date": "1985-11-29",
+    "criteria": "Learning"
+  }
+}
