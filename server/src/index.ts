@@ -5,7 +5,7 @@ import diagnosesRouter from './routes/diagnoses';
 import patientRouter from './routes/patient';
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(express.static('front'));
 app.use(cors());
