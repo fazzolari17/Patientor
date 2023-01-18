@@ -10,7 +10,7 @@
     "format": "npx prettier --write .",
     "check": "npx prettier --check .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "npm install && tsc"
   },
   "author": "Giuseppe Fazzolari",
   "license": "ISC",
