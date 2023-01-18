@@ -1,4 +1,4 @@
-import data from '../../data/patients';
+import data from '../data/patients';
 import {
   Patient,
   PatientEntry,
