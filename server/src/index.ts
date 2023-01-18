@@ -16,7 +16,7 @@ app.get('/api/ping', (_req, res) => {
   res.status(200).send('pong');
 });
 
-app.get('/health', (_req, res) => {
+app.get('/api/health', (_req, res) => {
   res.status(200).send('200 ok');
 });
 
