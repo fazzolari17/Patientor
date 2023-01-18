@@ -4,7 +4,7 @@
   "description": "The backend for the patientor-frontend",
   "main": "index.js",
   "scripts": {
-    "start": "node build/src/index.js",
+    "start": "node build/index.js",
     "dev": "ts-node-dev src/index.ts",
     "lint": "eslint --ext .tx",
     "format": "npx prettier --write .",
