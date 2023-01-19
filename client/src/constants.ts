@@ -1,6 +1,8 @@
-const production = 'https://patientor-ccvj.onrender.com';
-const local = 'http://localhost:3001';
+// const PORT = process.env.port;
 
-const url = process.env.NODE_ENV === 'development' ? local : production;
+const production = `https://patientor-ccvj.onrender.com`;
+// const local = 'http://localhost:3001';
 
-export const apiBaseUrl = `${url}/api`;
+// const url = process.env.NODE_ENV === 'development' ? local : production;
+
+export const apiBaseUrl = `${production}/api`;
