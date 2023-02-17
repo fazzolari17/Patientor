@@ -1,19 +1,19 @@
-import React from "react";
-import { Grid, Button } from "@material-ui/core";
-import { Field, Formik, Form } from "formik";
-import { TextField } from "../AddPatientModal/FormField";
-import { DiagnosisSelection } from "../AddPatientModal/FormField";
-import { useStateValue } from "../state";
-import { Diagnosis } from "../types";
-import { parseDate } from "../utils/utils";
-import { SelectField } from "../AddPatientModal/FormField";
+import React from 'react';
+import { Grid, Button } from '@material-ui/core';
+import { Field, Formik, Form } from 'formik';
+import { TextField } from '../AddPatientModal/FormField';
+import { DiagnosisSelection } from '../AddPatientModal/FormField';
+import { useStateValue } from '../state';
+import { Diagnosis } from '../types';
+import { parseDate } from '../utils/utils';
+import { SelectField } from '../AddPatientModal/FormField';
 
 export type EntryFormValues = {
-  type: "HealthCheck";
+  type: 'HealthCheck';
   date: string;
   description: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis["code"]>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
   healthCheckRating: number;
 };
 
@@ -27,22 +27,22 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
   return (
     <Formik
       initialValues={{
-        type: "HealthCheck",
-        date: "",
-        description: "",
-        specialist: "",
+        type: 'HealthCheck',
+        date: '',
+        description: '',
+        specialist: '',
         healthCheckRating: 0,
         diagnosisCodes: [],
       }}
       onSubmit={onSubmit}
       validate={(values) => {
-        const requiredError = "Field is required";
+        const requiredError = 'Field is required';
         const errors: { [field: string]: string } = {};
 
         if (!values.date) {
           errors.date = requiredError;
         } else if (!parseDate(values.date)) {
-          errors.date = "Malformatted date required: YYYY-MM-DD";
+          errors.date = 'Malformatted date required: YYYY-MM-DD';
         }
         if (!values.description) {
           errors.description = requiredError;
@@ -84,10 +84,10 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
               name="healthCheckRating"
               label="Health Check Rating"
               options={[
-                { value: 0, label: "Healthy" },
-                { value: 1, label: "Low Risk" },
-                { value: 2, label: "High Risk" },
-                { value: 3, label: "Critical Risk" },
+                { value: 0, label: 'Healthy' },
+                { value: 1, label: 'Low Risk' },
+                { value: 2, label: 'High Risk' },
+                { value: 3, label: 'Critical Risk' },
               ]}
             />
             <DiagnosisSelection
@@ -100,7 +100,7 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
                 <Button
                   color="secondary"
                   variant="contained"
-                  style={{ float: "left" }}
+                  style={{ float: 'left' }}
                   type="button"
                   onClick={onCancel}
                 >
@@ -110,7 +110,7 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
               <Grid item>
                 <Button
                   style={{
-                    float: "right",
+                    float: 'right',
                   }}
                   type="submit"
                   variant="contained"

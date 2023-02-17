@@ -14,11 +14,11 @@ export interface BaseEntry {
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis["code"]>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
 export interface HospitalEntry extends BaseEntry {
-  type: "Hospital";
+  type: 'Hospital';
   discharge: {
     date: string;
     criteria: string;
@@ -26,12 +26,12 @@ export interface HospitalEntry extends BaseEntry {
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry {
-  type: "OccupationalHealthcare";
+  type: 'OccupationalHealthcare';
   employerName: string;
 }
 
 export interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
+  type: 'HealthCheck';
   healthCheckRating: healthCheckRating;
 }
 
@@ -44,11 +44,11 @@ export interface NewBaseEntry {
   date: string;
   description: string;
   specialist: string;
-  diagnosesCodes?: Array<Diagnosis["code"]>;
+  diagnosesCodes?: Array<Diagnosis['code']>;
 }
 
 interface NewHospitalEntry extends NewBaseEntry {
-  type: "Hospital";
+  type: 'Hospital';
   discharge: {
     date: string;
     criteria: string;
@@ -56,26 +56,26 @@ interface NewHospitalEntry extends NewBaseEntry {
 }
 
 interface NewOccupationalHealthcareEntry extends NewBaseEntry {
-  type: "OccupationalHealthcare";
+  type: 'OccupationalHealthcare';
   employerName: string;
 }
 
 interface NewHealthCheckEntry extends NewBaseEntry {
-  type: "HealthCheck";
+  type: 'HealthCheck';
   healthCheckRating: number;
 }
 
 export enum Gender {
-  Male = "male",
-  Female = "female",
-  Other = "other",
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
 }
 
 export enum healthCheckRating {
-  "Healthy" = 0,
-  "LowRisk" = 1,
-  "HighRisk" = 2,
-  "CriticalRisk" = 3,
+  'Healthy' = 0,
+  'LowRisk' = 1,
+  'HighRisk' = 2,
+  'CriticalRisk' = 3,
 }
 
 export interface Patient {
@@ -97,21 +97,21 @@ export interface BaseEntryFormValues {
   date: string;
   description: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis["code"]>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
 interface HospitalFormValues extends BaseEntryFormValues {
-  type: "Hospital";
+  type: 'Hospital';
   dischargeDate: string;
   dischargeCriteria: string;
 }
 
 interface OccupationalHealthcareFormValues extends BaseEntryFormValues {
-  type: "OccupationalHealthcare";
+  type: 'OccupationalHealthcare';
   employerName: string;
 }
 
 interface HealthCheckFormValues extends BaseEntryFormValues {
-  type: "HealthCheck";
+  type: 'HealthCheck';
   healthCheckRating: number;
 }

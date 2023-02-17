@@ -1,5 +1,5 @@
-import axios from "axios";
-import { apiBaseUrl } from "../constants";
+import axios from 'axios';
+import { apiBaseUrl } from '../constants';
 
 interface Credentials {
   firstName: string;

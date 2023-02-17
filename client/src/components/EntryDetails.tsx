@@ -1,6 +1,6 @@
-import { Card } from "@material-ui/core";
-import { Favorite, Work, MedicalServices } from "@mui/icons-material";
-import { Entry } from "../types";
+import { Card } from '@material-ui/core';
+import { Favorite, Work, MedicalServices } from '@mui/icons-material';
+import { Entry } from '../types';
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   const assertNever = (value: never): never => {
@@ -12,24 +12,24 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   const colorPicker = (rating: number): string => {
     switch (rating) {
       case 0:
-        return "green";
+        return 'green';
         break;
       case 1:
-        return "yellow";
+        return 'yellow';
         break;
       case 2:
-        return "orange";
+        return 'orange';
         break;
       case 3:
-        return "red";
+        return 'red';
         break;
       default:
-        return "blue";
+        return 'blue';
     }
   };
 
   switch (entry.type) {
-    case "Hospital":
+    case 'Hospital':
       return (
         <Card variant="outlined">
           <p>
@@ -40,7 +40,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
         </Card>
       );
       break;
-    case "OccupationalHealthcare":
+    case 'OccupationalHealthcare':
       return (
         <Card variant="outlined">
           <p>
@@ -51,11 +51,11 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
         </Card>
       );
       break;
-    case "HealthCheck":
+    case 'HealthCheck':
       return (
         <Card variant="outlined">
           <p>
-            {entry.date} <MedicalServices />{" "}
+            {entry.date} <MedicalServices />{' '}
           </p>
           <p>{entry.description}</p>
           <Favorite

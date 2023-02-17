@@ -1,21 +1,21 @@
-import React from "react";
-import { Grid, Button } from "@material-ui/core";
-import { Field, Formik, Form } from "formik";
-import { TextField } from "../AddPatientModal/FormField";
-import { DiagnosisSelection } from "../AddPatientModal/FormField";
-import { useStateValue } from "../state";
-import { Diagnosis } from "../types";
+import React from 'react';
+import { Grid, Button } from '@material-ui/core';
+import { Field, Formik, Form } from 'formik';
+import { TextField } from '../AddPatientModal/FormField';
+import { DiagnosisSelection } from '../AddPatientModal/FormField';
+import { useStateValue } from '../state';
+import { Diagnosis } from '../types';
 // import { EntryFormValues } from '../types';
-import { parseDate } from "../utils/utils";
+import { parseDate } from '../utils/utils';
 
 export type EntryFormValues = {
-  type: "Hospital";
+  type: 'Hospital';
   date: string;
   description: string;
   specialist: string;
   dischargeDate: string;
   dischargeCriteria: string;
-  diagnosisCodes?: Array<Diagnosis["code"]>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
 };
 
 interface Props {
@@ -28,23 +28,23 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
   return (
     <Formik
       initialValues={{
-        type: "Hospital",
-        date: "",
-        description: "",
-        specialist: "",
-        dischargeDate: "",
-        dischargeCriteria: "",
+        type: 'Hospital',
+        date: '',
+        description: '',
+        specialist: '',
+        dischargeDate: '',
+        dischargeCriteria: '',
         diagnosisCodes: [],
       }}
       onSubmit={onSubmit}
       validate={(values) => {
-        const requiredError = "Field is required";
+        const requiredError = 'Field is required';
         const errors: { [field: string]: string } = {};
 
         if (!values.date) {
           errors.date = requiredError;
         } else if (!parseDate(values.date)) {
-          errors.date = "Malformatted date required: YYYY-MM-DD";
+          errors.date = 'Malformatted date required: YYYY-MM-DD';
         }
         if (!values.description) {
           errors.description = requiredError;
@@ -56,7 +56,7 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
           errors.discharge = requiredError;
         } else if (!parseDate(values.dischargeDate)) {
           errors.dischargeDate =
-            "Malformatted date required format: YYYY-MM-DD";
+            'Malformatted date required format: YYYY-MM-DD';
         }
         if (!values.dischargeCriteria) {
           errors.dischargeCriteria = requiredError;
@@ -110,7 +110,7 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
                 <Button
                   color="secondary"
                   variant="contained"
-                  style={{ float: "left" }}
+                  style={{ float: 'left' }}
                   type="button"
                   onClick={onCancel}
                 >
@@ -120,7 +120,7 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
               <Grid item>
                 <Button
                   style={{
-                    float: "right",
+                    float: 'right',
                   }}
                   type="submit"
                   variant="contained"

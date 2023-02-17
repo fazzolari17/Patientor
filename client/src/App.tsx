@@ -1,22 +1,22 @@
-import React from "react";
-import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
-import { Button, Divider, Container } from "@material-ui/core";
+import React from 'react';
+import axios from 'axios';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import { Button, Divider, Container } from '@material-ui/core';
 
-import { apiBaseUrl } from "./constants";
-import { useStateValue } from "./state";
-import { Patient, Diagnosis } from "./types";
+import { apiBaseUrl } from './constants';
+import { useStateValue } from './state';
+import { Patient, Diagnosis } from './types';
 
-import PatientListPage from "./PatientListPage";
-import { Typography } from "@material-ui/core";
+import PatientListPage from './PatientListPage';
+import { Typography } from '@material-ui/core';
 
-import PatientPage from "./PatientPage";
-import { setPatientList, setDiagnoses } from "./state";
+import PatientPage from './PatientPage';
+import { setPatientList, setDiagnoses } from './state';
 
-import PersistentDrawerLeft from "./PersistentDrawer";
-import SignUp from "./SignUp/SignUp";
-import LoginPage from "./LoginPage/index";
-import HomePage from "./Home/HomePage";
+import PersistentDrawerLeft from './PersistentDrawer';
+import SignUp from './SignUp/SignUp';
+import LoginPage from './LoginPage/index';
+import HomePage from './Home/HomePage';
 
 const App = () => {
   const [, dispatch] = useStateValue();

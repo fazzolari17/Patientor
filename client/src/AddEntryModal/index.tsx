@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,12 +6,12 @@ import {
   Divider,
   Button,
   Grid,
-} from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import { EntryFormValues } from "../types";
-import HospitalEntryForm from "./HospitalEntryForm";
-import HealthCheckForm from "./HealthCheckForm";
-import OccupationalHealthcareForm from "./OccupationalHealthcareForm";
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { EntryFormValues } from '../types';
+import HospitalEntryForm from './HospitalEntryForm';
+import HealthCheckForm from './HealthCheckForm';
+import OccupationalHealthcareForm from './OccupationalHealthcareForm';
 
 interface Props {
   modalOpen: boolean;
@@ -59,10 +59,10 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
     <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
       <Grid
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-around',
         }}
       >
         <Grid item>
@@ -74,8 +74,8 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
             onClick={decreaseCount}
             // onClick={onCancel}
           >
-            {" "}
-            {"<"}
+            {' '}
+            {'<'}
           </Button>
         </Grid>
         <Grid item>
@@ -90,8 +90,8 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
             onClick={increaseCount}
             // onClick={onCancel}
           >
-            {" "}
-            {">"}
+            {' '}
+            {'>'}
           </Button>
         </Grid>
       </Grid>

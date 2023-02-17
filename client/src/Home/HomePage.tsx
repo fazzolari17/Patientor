@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
 const Home = () => {
   const style = {
     flex: {
-      display: "flex",
-      flexDirection: "column" as "column",
-      alignItems: "center",
-      justifyContent: "center",
+      display: 'flex',
+      flexDirection: 'column' as 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   };
 

@@ -1,19 +1,19 @@
-import React from "react";
-import { Grid, Button } from "@material-ui/core";
-import { Field, Formik, Form } from "formik";
-import { TextField } from "../AddPatientModal/FormField";
-import { DiagnosisSelection } from "../AddPatientModal/FormField";
-import { useStateValue } from "../state";
-import { Diagnosis } from "../types";
-import { parseDate } from "../utils/utils";
+import React from 'react';
+import { Grid, Button } from '@material-ui/core';
+import { Field, Formik, Form } from 'formik';
+import { TextField } from '../AddPatientModal/FormField';
+import { DiagnosisSelection } from '../AddPatientModal/FormField';
+import { useStateValue } from '../state';
+import { Diagnosis } from '../types';
+import { parseDate } from '../utils/utils';
 
 export type EntryFormValues = {
-  type: "OccupationalHealthcare";
+  type: 'OccupationalHealthcare';
   date: string;
   description: string;
   specialist: string;
   employerName: string;
-  diagnosisCodes?: Array<Diagnosis["code"]>;
+  diagnosisCodes?: Array<Diagnosis['code']>;
 };
 
 interface Props {
@@ -26,22 +26,22 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
   return (
     <Formik
       initialValues={{
-        type: "OccupationalHealthcare",
-        date: "",
-        description: "",
-        specialist: "",
-        employerName: "",
+        type: 'OccupationalHealthcare',
+        date: '',
+        description: '',
+        specialist: '',
+        employerName: '',
         diagnosisCodes: [],
       }}
       onSubmit={onSubmit}
       validate={(values) => {
-        const requiredError = "Field is required";
+        const requiredError = 'Field is required';
         const errors: { [field: string]: string } = {};
 
         if (!values.date) {
           errors.date = requiredError;
         } else if (!parseDate(values.date)) {
-          errors.date = "Malformatted date required: YYYY-MM-DD";
+          errors.date = 'Malformatted date required: YYYY-MM-DD';
         }
         if (!values.description) {
           errors.description = requiredError;
@@ -95,7 +95,7 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
                 <Button
                   color="secondary"
                   variant="contained"
-                  style={{ float: "left" }}
+                  style={{ float: 'left' }}
                   type="button"
                   onClick={onCancel}
                 >
@@ -105,7 +105,7 @@ const HospitalEntryForm = ({ onSubmit, onCancel }: Props) => {
               <Grid item>
                 <Button
                   style={{
-                    float: "right",
+                    float: 'right',
                   }}
                   type="submit"
                   variant="contained"

@@ -1,19 +1,19 @@
-import React from "react";
-import axios from "axios";
-import { nanoid } from "nanoid";
-import { useParams } from "react-router-dom";
-import { apiBaseUrl } from "../constants";
-import { useStateValue } from "../state";
-import { NewEntry, Entry, Patient, Diagnosis } from "../types";
-import { updatePatient, addEntry, setPatientDiagnoses } from "../state/reducer";
+import React from 'react';
+import axios from 'axios';
+import { nanoid } from 'nanoid';
+import { useParams } from 'react-router-dom';
+import { apiBaseUrl } from '../constants';
+import { useStateValue } from '../state';
+import { NewEntry, Entry, Patient, Diagnosis } from '../types';
+import { updatePatient, addEntry, setPatientDiagnoses } from '../state/reducer';
 
-import { IconContext } from "react-icons";
-import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
-import EntryDetails from "../components/EntryDetails";
-import { Stack, Button } from "@mui/material";
-import AddEntryModal from "../AddEntryModal";
-import { EntryFormValues } from "../types";
-import { assertNever, parseString } from "../utils/utils";
+import { IconContext } from 'react-icons';
+import { BsGenderFemale, BsGenderMale } from 'react-icons/bs';
+import EntryDetails from '../components/EntryDetails';
+import { Stack, Button } from '@mui/material';
+import AddEntryModal from '../AddEntryModal';
+import { EntryFormValues } from '../types';
+import { assertNever, parseString } from '../utils/utils';
 
 const PatientPage = () => {
   const paramId = useParams().id;
@@ -51,7 +51,7 @@ const PatientPage = () => {
 
   const setDiagnosesCodesArray = (patient: Patient): void => {
     const { entries } = patient;
-    const codes: Array<Diagnosis["code"]> = [];
+    const codes: Array<Diagnosis['code']> = [];
     entries.forEach((entry) => {
       if (entry.diagnosisCodes) {
         for (let i = 0; i < entry.diagnosisCodes.length; i++) {
@@ -67,13 +67,13 @@ const PatientPage = () => {
   const submitNewEntry = async (values: EntryFormValues) => {
     let newEntry: NewEntry;
     if (!paramId) {
-      throw new Error("User is not in Database");
+      throw new Error('User is not in Database');
     }
 
     switch (values.type) {
-      case "Hospital":
+      case 'Hospital':
         newEntry = {
-          type: "Hospital",
+          type: 'Hospital',
           date: values.date,
           description: values.description,
           specialist: values.specialist,
@@ -91,9 +91,9 @@ const PatientPage = () => {
           };
         }
         break;
-      case "OccupationalHealthcare":
+      case 'OccupationalHealthcare':
         newEntry = {
-          type: "OccupationalHealthcare",
+          type: 'OccupationalHealthcare',
           date: values.date,
           description: values.description,
           specialist: values.specialist,
@@ -108,9 +108,9 @@ const PatientPage = () => {
           };
         }
         break;
-      case "HealthCheck":
+      case 'HealthCheck':
         newEntry = {
-          type: "HealthCheck",
+          type: 'HealthCheck',
           date: values.date,
           description: values.description,
           specialist: values.specialist,
@@ -138,13 +138,13 @@ const PatientPage = () => {
       closeModal();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error(error?.response?.data || "Unrecognized axios error");
+        console.error(error?.response?.data || 'Unrecognized axios error');
         setError(
-          String(error?.response?.data?.error) || "Unrecognized axios error"
+          String(error?.response?.data?.error) || 'Unrecognized axios error'
         );
       } else {
-        console.log("Unknown error", error);
-        setError("Unknown error");
+        console.log('Unknown error', error);
+        setError('Unknown error');
       }
     }
   };
@@ -158,7 +158,7 @@ const PatientPage = () => {
       dispatch(updatePatient(response.data));
       setDiagnosesCodesArray(found);
     } catch (error) {
-      console.error("STATUS", error.message);
+      console.error('STATUS', error.message);
     }
   };
 
@@ -167,7 +167,7 @@ const PatientPage = () => {
   );
 
   if (!found) {
-    throw new Error("USER NOT FOUND::");
+    throw new Error('USER NOT FOUND::');
   } else if (found) {
     if (found.ssn === undefined) {
       const patientId: string = found.id;
@@ -177,10 +177,10 @@ const PatientPage = () => {
 
   // Icon Selectors
   const genderIconDecider =
-    found.gender === "male" ? <BsGenderMale /> : <BsGenderFemale />;
+    found.gender === 'male' ? <BsGenderMale /> : <BsGenderFemale />;
 
   const genderIcon = (
-    <IconContext.Provider value={{ color: "red" }}>
+    <IconContext.Provider value={{ color: 'red' }}>
       {genderIconDecider}
     </IconContext.Provider>
   );

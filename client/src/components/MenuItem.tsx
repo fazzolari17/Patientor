@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import { useNavigate } from "react-router-dom";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import { capitalized } from "../utils/helperFunctions";
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { capitalized } from '../utils/helperFunctions';
 
 interface Props {
   disabled?: boolean;

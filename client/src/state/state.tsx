@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useReducer } from "react";
-import { Diagnosis, Patient } from "../types";
+import React, { createContext, useContext, useReducer } from 'react';
+import { Diagnosis, Patient } from '../types';
 
-import { Action } from "./reducer";
+import { Action } from './reducer';
 
 export type State = {
   diagnoses: Diagnosis[];
   patients: { [id: string]: Patient };
-  patientDiagnosesCodes: Array<Diagnosis["code"]>;
+  patientDiagnosesCodes: Array<Diagnosis['code']>;
 };
 
 const initialState: State = {
