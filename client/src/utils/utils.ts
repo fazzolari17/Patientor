@@ -1,4 +1,4 @@
-import { Diagnosis } from "./types";
+import { Diagnosis } from "../types";
 
 export const assertNever = (value: never): never => {
   throw new Error(

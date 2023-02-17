@@ -13,6 +13,11 @@ import { Typography } from "@material-ui/core";
 import PatientPage from "./PatientPage";
 import { setPatientList, setDiagnoses } from "./state";
 
+import PersistentDrawerLeft from "./PersistentDrawer";
+import SignUp from "./SignUp/SignUp";
+import LoginPage from "./LoginPage/index";
+import HomePage from "./Home/HomePage";
+
 const App = () => {
   const [, dispatch] = useStateValue();
 
@@ -46,23 +51,29 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div className="App">
-      <Router>
-        <Container>
-          <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
-            Patientor
-          </Typography>
-          <Button component={Link} to="/" variant="contained" color="primary">
-            Home
-          </Button>
-          <Divider hidden />
-          <Routes>
-            <Route path="/" element={<PatientListPage />} />
-            <Route path="/:id" element={<PatientPage />} />
-          </Routes>
-        </Container>
-      </Router>
-    </div>
+    <Router>
+      <PersistentDrawerLeft>
+        <div className="App">
+          <Container>
+            {/* <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
+              Patientor
+            </Typography>
+            <Button component={Link} to="/" variant="contained" color="primary">
+              Home
+            </Button> */}
+            <Divider hidden />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/patients" element={<PatientListPage />} />
+              <Route path="/sign%20up" element={<SignUp />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/:id" element={<PatientPage />} />
+            </Routes>
+          </Container>
+        </div>
+      </PersistentDrawerLeft>
+    </Router>
   );
 };
 

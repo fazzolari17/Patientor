@@ -6,7 +6,7 @@ import { DiagnosisSelection } from "../AddPatientModal/FormField";
 import { useStateValue } from "../state";
 import { Diagnosis } from "../types";
 // import { EntryFormValues } from '../types';
-import { parseDate } from "../utils";
+import { parseDate } from "../utils/utils";
 
 export type EntryFormValues = {
   type: "Hospital";

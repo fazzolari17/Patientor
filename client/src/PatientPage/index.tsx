@@ -13,7 +13,7 @@ import EntryDetails from "../components/EntryDetails";
 import { Stack, Button } from "@mui/material";
 import AddEntryModal from "../AddEntryModal";
 import { EntryFormValues } from "../types";
-import { assertNever, parseString } from "../utils";
+import { assertNever, parseString } from "../utils/utils";
 
 const PatientPage = () => {
   const paramId = useParams().id;

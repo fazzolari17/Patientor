@@ -5,7 +5,7 @@ import { TextField } from "../AddPatientModal/FormField";
 import { DiagnosisSelection } from "../AddPatientModal/FormField";
 import { useStateValue } from "../state";
 import { Diagnosis } from "../types";
-import { parseDate } from "../utils";
+import { parseDate } from "../utils/utils";
 import { SelectField } from "../AddPatientModal/FormField";
 
 export type EntryFormValues = {
