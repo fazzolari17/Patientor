@@ -1,16 +1,19 @@
 import axios from 'axios';
+
+// Constants
 import { apiBaseUrl } from '../constants';
 
-interface Credentials {
-  email: string;
-  password: string;
-}
+// Types
+import { ILoginCredentials } from '../types';
 
-const login = async (credentials: Credentials) => {
-  const response = await axios.post(`${apiBaseUrl}/login`, credentials);
-  console.log(response.data);
-  return response.data;
+const login = async (credentials: ILoginCredentials) => {
+  try {
+    const response = await axios.post(`${apiBaseUrl}/login`, credentials);
+
+    return response.data;
+  } catch (error) {
+    return console.log(error);
+  }
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default { login };

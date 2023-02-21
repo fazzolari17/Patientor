@@ -1,3 +1,21 @@
+export interface ILoggedInUser {
+  token: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  id: string | null;
+  email: string | null;
+}
+
+export interface ILoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface User {
+  email: string;
+  password: string;
+}
+
 export interface Diagnosis {
   code: string;
   name: string;
@@ -83,10 +101,12 @@ export interface Patient {
   name: string;
   occupation: string;
   gender: Gender;
-  ssn: string;
+  ssn?: string;
   dateOfBirth?: string;
   entries: Entry[];
 }
+
+export type NonSensitivePatient = Omit<Patient, 'ssn'>;
 
 export type EntryFormValues =
   | HospitalFormValues

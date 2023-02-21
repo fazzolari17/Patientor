@@ -1,79 +1,149 @@
 import React from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import { Button, Divider, Container } from '@material-ui/core';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
+// constants
 import { apiBaseUrl } from './constants';
-import { useStateValue } from './state';
-import { Patient, Diagnosis } from './types';
 
-import PatientListPage from './PatientListPage';
+// material ui
+import { Button, Divider, Container } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 
-import PatientPage from './PatientPage';
-import { setPatientList, setDiagnoses } from './state';
+// Redux / Reducers
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from './store';
+import { setUser, useLogin, useRemoveUserFromState } from './reducers/userReducer';
+import { useFetchPatientList, setAllPatients, useRemovePatientsFromState } from './reducers/patientReducer';
 
-import PersistentDrawerLeft from './PersistentDrawer';
-import SignUp from './SignUp/SignUp';
-import LoginPage from './LoginPage/index';
-import HomePage from './Home/HomePage';
+// Types
+import {  RootState, } from './store';
+import { User, ILoggedInUser } from './types';
+
+// Components / Views
+import Menu from './Menu';
+import SignUp from './views/SignUp/SignUp';
+import HomePage from './views/Home/HomePage';
+import PatientPage from './views/PatientPage';
+import LoginPage from './views/LoginPage/index';
+import PatientListPage from './views/PatientListPage';
+
+// Services
+import { setDiagnoses, useGetAllDiagnoses, useRemoveDiagnosesFromState } from './reducers/diagnosesReducer';
 
 const App = () => {
-  const [, dispatch] = useStateValue();
+  const navigate = useNavigate();
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
+  const userEmail = useSelector((state: ILoggedInUser) => state.email);
+  const { user } = useSelector((state: RootState) => state);
+  const { patients } = useSelector((state: RootState) => state);
 
   React.useEffect(() => {
+
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
-    const fetchDiagnosis = async () => {
+    const loggedInUserJSON = localStorage.getItem('loggedInUser');
+    const patientsInLocalStorage = localStorage.getItem('patients');
+    const diagnosesInLocalStorage = localStorage.getItem('diagnoses');
+    // Fix this mess
+    if (loggedInUserJSON) {
+      const user = JSON.parse(loggedInUserJSON);
+      if (user.firstName !== null) {
+        void dispatch(useFetchPatientList(user.token));
+        void dispatch(useGetAllDiagnoses(user.token));
+        setIsLoggedIn(true);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+        dispatch(setUser(user));
+        if (patientsInLocalStorage) {
+          const patients = JSON.parse(patientsInLocalStorage);
+          if (patients.length === 0) return;
+          dispatch(setAllPatients(patients));
+        } else if (!patientsInLocalStorage) {
+          localStorage.removeItem('patients');
+        }
+        if (diagnosesInLocalStorage) {
+          const diagnoses = JSON.parse(diagnosesInLocalStorage);
+          if (diagnoses.length === 0) return;
+          dispatch(setDiagnoses(diagnoses));
+        } else if (!diagnosesInLocalStorage) {
+          localStorage.removeItem('diagnoses');
+        }
+      }
+    } else if (!loggedInUserJSON) {
+      localStorage.removeItem('user');
+    }
+
+    const fetchDiagnosis = () => {
       try {
-        const { data: diagnoses } = await axios.get<Diagnosis[]>(
-          `${apiBaseUrl}/diagnoses`
-        );
-        dispatch(setDiagnoses(diagnoses));
+        // const getDiagnosesAndSaveToStore = getAllDiagnoses();
+        // getDiagnosesAndSaveToStore(dispatch)
+        // dispatch(getAllDiagnoses());
       } catch (error) {
         console.log(error);
       }
     };
 
-    const fetchPatientList = async () => {
-      try {
-        const { data: patientListFromApi } = await axios.get<Patient[]>(
-          `${apiBaseUrl}/patients`
-        );
-        dispatch(setPatientList(patientListFromApi));
-      } catch (e) {
-        console.error(e);
-      }
-    };
+  }, []);
 
-    void fetchPatientList();
-    void fetchDiagnosis();
-  }, [dispatch]);
+  const handleLogin = async (userToLogin: User) => {
+    dispatch(useLogin(userToLogin));
+    dispatch(useFetchPatientList());
+    navigate('/home');
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = async () => {
+    navigate('/home');
+    setIsLoggedIn(false);
+    dispatch(useRemoveUserFromState());
+    dispatch(useRemovePatientsFromState());
+    dispatch(useRemoveDiagnosesFromState());
+    localStorage.removeItem('loggedInUser');
+    localStorage.removeItem('patients');
+    localStorage.removeItem('diagnoses');
+  };
 
   return (
-    <Router>
-      <PersistentDrawerLeft>
-        <div className="App">
-          <Container>
-            {/* <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
+    <Menu
+      handleLogin={handleLogin}
+      handleLogout={handleLogout}
+      isLoggedIn={isLoggedIn}
+    >
+      <div className="App">
+        <Container>
+          {/* <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
               Patientor
             </Typography>
             <Button component={Link} to="/" variant="contained" color="primary">
               Home
             </Button> */}
-            <Divider hidden />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/patients" element={<PatientListPage />} />
-              <Route path="/sign%20up" element={<SignUp />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/:id" element={<PatientPage />} />
-            </Routes>
-          </Container>
-        </div>
-      </PersistentDrawerLeft>
-    </Router>
+          <Divider hidden />
+          <Routes>
+            <Route
+              path="/home"
+              element={<HomePage isLoggedIn={isLoggedIn} />}
+            />
+
+            <Route path={'/patients/'} element={<PatientListPage />} />
+            <Route path={'/patients/:id'} element={<PatientPage />} />
+            <Route path="/sign%20up" element={<SignUp />} />
+            <Route
+              path="/login"
+              element={
+                <LoginPage
+                  handleLogin={handleLogin}
+                  handleLogout={handleLogout}
+                />
+              }
+            />
+            {/* <Route path="/*"  element={<PatientPage />} / */}
+            <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
+          </Routes>
+        </Container>
+      </div>
+    </Menu>
   );
 };
 

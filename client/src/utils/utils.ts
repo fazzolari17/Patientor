@@ -1,4 +1,4 @@
-import { Diagnosis } from '../types';
+import { Diagnosis, Entry, Gender, Patient } from '../types';
 
 export const assertNever = (value: never): never => {
   throw new Error(
@@ -17,11 +17,72 @@ export const parseString = (text: unknown): string => {
   return text;
 };
 
-export const parseDate = (date: unknown): boolean => {
-  if (!isString(date)) {
-    throw new Error('Date is not a String');
+const isGender = (param: any): param is Gender => {
+  return Object.values(Gender).includes(param);
+};
+
+const parseGender = (gender: unknown): Gender => {
+  if (!gender || !isString(gender) || !isGender(gender)) {
+    throw new Error(`Missing Gender`);
   }
+  return gender;
+};
+
+const parseOccupation = (occupation: unknown): string => {
+  if (!occupation || !isString(occupation)) {
+    throw new Error(`Missing occupation`);
+  }
+  return occupation;
+};
+
+const parseSsn = (ssn: unknown): string => {
+  if (!ssn || !isString(ssn)) {
+    throw new Error(`SSN is missing or is incorrect`);
+  }
+  return ssn;
+};
+
+export const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
+};
+
+export const parseDate = (description: string, date: unknown): string => {
+  if (!date || !isString(date) || !isDate(date)) {
+    throw new Error(`Incorrect or missing ${description}: ${date}`);
+  }
+  return date;
+};
+
+type fields = {
+  id: unknown;
+  name: unknown;
+  dateOfBirth?: unknown;
+  ssn?: unknown;
+  occupation: unknown;
+  gender: unknown;
+  entries: Entry[];
+};
+
+export const parseRecievedData = ({
+  id,
+  name,
+  dateOfBirth,
+  ssn,
+  occupation,
+  gender,
+  entries,
+}: fields) => {
+  const patient: Patient = {
+    id: parseString(id),
+    name: parseString(name),
+    dateOfBirth: parseDate('date of birth', dateOfBirth),
+    ssn: parseSsn(ssn),
+    occupation: parseOccupation(occupation),
+    gender: parseGender(gender),
+    entries,
+  };
+
+  return patient;
 };
 
 export const parseDiagnoses = (
