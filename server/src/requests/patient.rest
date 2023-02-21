@@ -1,0 +1,5 @@
+@PORT= 3001
+@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2NzY4MzEzNjUsImV4cCI6MTY3NjgzNDk2NX0.4epaMewf5sidfk4uF7oO9kXMe702yQQ_Co7RCt6pF8Q
+
+GET http://localhost:{{PORT}}/api/patients
+Authorization: {{token}}
