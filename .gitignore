@@ -1,4 +1,5 @@
-build
+/build
+/front
 
 node_modules 
 .DS_Store
