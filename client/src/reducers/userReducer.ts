@@ -39,15 +39,21 @@ export const useLogin = (credentials: ILoginCredentials) => {
   return async (dispatch: Dispatch) => {
     const response = await loginService.login(credentials);
     
+    if (response.error.response.status >= 400) {
+        const message = response.error.response.data.error;
+        alert(message);
+        return response.error.response.data.error;
+    }  
+    
     if (response.token === 'undefined') {
+      console.log('HERE');
       if (response.error.response.status >= 400) {
         const message = response.error.response.data.error;
         alert(message);
         return response.error.response.data.error;
       }  
-    }
+    } else if (response.token) {
 
-    
     dispatch(setUser(response));
     localStorage.setItem('loggedInUser', JSON.stringify(response));
 
@@ -65,6 +71,7 @@ export const useLogin = (credentials: ILoginCredentials) => {
     dispatch(setDiagnoses(diagnoses));
     localStorage.setItem('diagnoses', JSON.stringify(diagnoses));
     };
+    }
 };
 
 export const useRemoveUserFromState = () => {
