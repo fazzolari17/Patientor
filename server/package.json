@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node build/index.js",
-    "dev": "ts-node-dev src/index.ts",
+    "dev": "NODE_ENV=development ts-node-dev src/index.ts",
     "lint": "eslint --ext .tx",
     "format": "npx prettier --write .",
     "check": "npx prettier --check .",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test echo \"Error: no test specified\" && exit 1",
     "build": "npm install && tsc",
     "tsc": "tsc"
   },
@@ -23,8 +23,7 @@
     "@typescript-eslint/parser": "^5.38.1",
     "eslint": "^8.24.0",
     "prettier": "2.7.1",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^4.8.4"
+    "ts-node-dev": "^2.0.0"   
   },
   "dependencies": {
     "@types/cors": "^2.8.12",
@@ -37,6 +36,7 @@
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "typescript": "^4.8.4"
   }
 }
