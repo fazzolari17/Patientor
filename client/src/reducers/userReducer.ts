@@ -40,7 +40,7 @@ export const useLogin = (credentials: ILoginCredentials) => {
     const response = await loginService.login(credentials);
     
     if (response.token === 'undefined') {
-      if (response.error.response.status = 400) {
+      if (response.error.response.status >= 400) {
         const message = response.error.response.data.error;
         alert(message);
         return response.error.response.data.error;
