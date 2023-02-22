@@ -1,7 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { connect } from 'react-redux';
+
+// Utils
+import { capitalized } from '../../utils/helperFunctions';
+import { parseString } from '../../utils/utils';
 
 const style = {
   flex: {
@@ -22,7 +25,7 @@ const Home = ({ isLoggedIn }: IProps) => {
 
   const renderWelcomeMessage = isLoggedIn ? (
     <>
-      <h2>{`Welcome ${firstName} ${lastName} the the Patient Portal`}</h2>
+      <h2>{`Welcome ${capitalized(parseString(firstName))} ${capitalized(parseString(lastName))} the the Patient Portal`}</h2>
       <h3>
         Click on the icon in the top left corner to open the menu and use the
         menu to navigate the app
