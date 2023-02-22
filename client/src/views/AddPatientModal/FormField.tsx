@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 
 // Formik
 import { ErrorMessage, Field, FieldProps, FormikProps } from 'formik';
@@ -143,7 +144,7 @@ export const DiagnosisSelection = ({
         input={<Input />}
       >
         {stateOptions.map((option) => (
-          <MenuItem key={option.key} value={option.value}>
+          <MenuItem key={uuid()} value={option.value}>
             {option.text}
           </MenuItem>
         ))}
