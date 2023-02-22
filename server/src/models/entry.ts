@@ -11,10 +11,6 @@ const baseEntrySchema = new mongoose.Schema<MongoBaseEntry>({
   sickLeave: {
     startDate: String,
     endDate: String
-  },
-  patient: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Patient'
   }
 });
 

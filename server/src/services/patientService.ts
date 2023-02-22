@@ -65,7 +65,6 @@ const addNewEntry = async (id: string, entry: NewEntry): Promise<MongoDocument |
 
     const updatedPatient = await Patient.findByIdAndUpdate(id,
       { $push: { entries: entry } }, { new: true }) as MongoDocument;
-    console.log('UpdatedPatient', updatedPatient);
     return updatedPatient;
   } catch (error: unknown) {
     const message = `Error retrieving patient from database: ${error}`;

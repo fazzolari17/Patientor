@@ -23,7 +23,7 @@ const Home = ({ isLoggedIn }: IProps) => {
     user: { firstName = '', lastName = '' },
   } = useSelector((state: RootState) => state);
 
-  const renderWelcomeMessage = isLoggedIn ? (
+  const renderWelcomeMessage = (isLoggedIn && firstName !== null) ? (
     <>
       <h2>{`Welcome ${capitalized(parseString(firstName))} ${capitalized(parseString(lastName))} the the Patient Portal`}</h2>
       <h3>

@@ -20,7 +20,6 @@ const patientSchema = new mongoose.Schema<PatientEntry>({
 
 patientSchema.set('toJSON', {
   transform: (_document, returnedObject) => {
-    console.log('RETURNED', returnedObject);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
