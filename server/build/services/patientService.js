@@ -31,13 +31,13 @@ const addNewPatient = (entry) => __awaiter(void 0, void 0, void 0, function* () 
         ssn: entry.ssn,
         gender: entry.gender,
         occupation: entry.occupation,
-        entries: entry.entries
+        entries: entry.entries,
     });
     const response = yield patient.save();
     return response;
 });
 const getNonSensitivePatientEntries = () => __awaiter(void 0, void 0, void 0, function* () {
-    const response = patient_1.default.find({}, { 'ssn': 0 });
+    const response = patient_1.default.find({}, { ssn: 0 });
     return response;
 });
 const getPatientEntries = () => {
@@ -53,7 +53,7 @@ const getPatientEntries = () => {
 };
 const addNewEntry = (id, entry) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updatedPatient = yield patient_1.default.findByIdAndUpdate(id, { $push: { entries: entry } }, { new: true });
+        const updatedPatient = (yield patient_1.default.findByIdAndUpdate(id, { $push: { entries: entry } }, { new: true }));
         return updatedPatient;
     }
     catch (error) {

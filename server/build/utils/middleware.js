@@ -18,7 +18,6 @@ const requestLogger = (request, _response, next) => {
 };
 const userExtractor = (request, response, next) => {
     const requests = request;
-    // const token = parseString('middleware token', requests.token);
     const secret = (0, utils_1.parseString)('process.env.SECRET', process.env.SECRET);
     const decodedToken = jsonwebtoken_1.default.verify(requests.token, secret);
     if (!decodedToken.id) {

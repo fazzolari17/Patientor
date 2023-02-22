@@ -32,7 +32,7 @@ const parseDate = (description, date) => {
     if (!date || !(0, exports.isString)(date) || !isDate(date)) {
         throw new Error(`Incorrect or missing ${description}: ${date}`);
     }
-    return (new Date(date).toISOString().split('T')[0]);
+    return new Date(date).toISOString().split('T')[0];
 };
 const parseString = (description, text) => {
     if (!text || !(0, exports.isString)(text)) {

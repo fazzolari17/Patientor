@@ -26,9 +26,12 @@ loginRouter.post('/', ((request, response) => __awaiter(void 0, void 0, void 0, 
             email: body.email,
         });
         if (!userToLogin) {
-            return response.status(400).json({
+            return response
+                .status(400)
+                .json({
                 error: 'user does not exist create an account',
-            }).end();
+            })
+                .end();
         }
         const passwordCorrect = userToLogin === null
             ? false
@@ -43,7 +46,9 @@ loginRouter.post('/', ((request, response) => __awaiter(void 0, void 0, void 0, 
             id: userToLogin._id,
         };
         const secret = (0, utils_1.parseString)('process.env.SECRET', process.env.SECRET);
-        const token = jsonwebtoken_1.default.sign(userForToken, secret, { expiresIn: config_1.default.setJwtExpirationTime() });
+        const token = jsonwebtoken_1.default.sign(userForToken, secret, {
+            expiresIn: config_1.default.setJwtExpirationTime(),
+        });
         return response.status(200).send({
             token,
             email: userToLogin.email,

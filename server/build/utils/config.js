@@ -18,5 +18,5 @@ const setJwtExpirationTime = () => {
 exports.default = {
     MONGODB_URI,
     PORT,
-    setJwtExpirationTime
+    setJwtExpirationTime,
 };

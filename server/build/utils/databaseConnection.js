@@ -23,7 +23,7 @@ const connectToDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(MONGODB_URI);
         logger_1.default.info('connected to MongoDB');
-        logger_1.default.info(`It has taken ${((Date.now() - start) / 1000)} seconds to connect to Mongo_DB`);
+        logger_1.default.info(`It has taken ${(Date.now() - start) / 1000} seconds to connect to Mongo_DB`);
     }
     catch (error) {
         if (typeof error === 'string') {

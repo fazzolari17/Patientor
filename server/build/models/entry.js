@@ -12,8 +12,8 @@ const baseEntrySchema = new mongoose_1.default.Schema({
     diagnosisCodes: [String],
     sickLeave: {
         startDate: String,
-        endDate: String
-    }
+        endDate: String,
+    },
 });
 baseEntrySchema.set('toJSON', {
     transform: (_document, returnedObject) => {
@@ -28,42 +28,42 @@ const hospitalEntry = new mongoose_1.default.Schema({
     type: {
         type: String,
         value: 'Hospital',
-        required: [true, 'Must have a type field']
+        required: [true, 'Must have a type field'],
     },
     discharge: {
         date: {
             type: String,
-            required: [true, 'Hospital entry discharge must have a date']
+            required: [true, 'Hospital entry discharge must have a date'],
         },
         criteria: {
             type: String,
-            required: [true, 'Hospital Entry must have a critera']
-        }
-    }
+            required: [true, 'Hospital Entry must have a critera'],
+        },
+    },
 });
 const occupationalHealthcare = new mongoose_1.default.Schema({
     type: {
         type: String,
         value: 'OccupationalHealthcare',
-        required: [true, 'Must have a type field']
+        required: [true, 'Must have a type field'],
     },
     employerName: String,
     sickLeave: {
         startDate: String,
-        endDate: String
-    }
+        endDate: String,
+    },
 });
 const healthCheckEntry = new mongoose_1.default.Schema({
     type: {
         type: String,
         value: 'HealthCheck',
-        required: [true, 'Must have a type field']
+        required: [true, 'Must have a type field'],
     },
     healthCheckRating: {
         type: Number,
         enum: [0, 1, 2, 3],
-        required: [true, 'Must have a healthCheckrating']
-    }
+        required: [true, 'Must have a healthCheckrating'],
+    },
 });
 hospitalEntry.add(baseEntrySchema);
 occupationalHealthcare.add(baseEntrySchema);
@@ -71,5 +71,5 @@ healthCheckEntry.add(baseEntrySchema);
 exports.default = {
     hospitalEntry,
     occupationalHealthcare,
-    healthCheckEntry
+    healthCheckEntry,
 };

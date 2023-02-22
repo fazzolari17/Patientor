@@ -14,7 +14,7 @@ const patientSchema = new mongoose_1.default.Schema({
     entries: [
         entry_1.default.hospitalEntry,
         entry_1.default.healthCheckEntry,
-        entry_1.default.occupationalHealthcare
+        entry_1.default.occupationalHealthcare,
     ],
 });
 patientSchema.set('toJSON', {
