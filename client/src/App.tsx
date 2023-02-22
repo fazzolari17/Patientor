@@ -104,7 +104,7 @@ const App = () => {
 
   const handleLogin = async (userToLogin: User) => {
     const loginResponse = await dispatch(useLogin(userToLogin));
-    console.log(loginResponse);
+
     if (loginResponse === 'user does not exist create an account') {
       return navigate('/sign%20up');
     } else if (loginResponse === 'invalid username or password') {
