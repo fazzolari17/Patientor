@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-// import 'express-async-errors';
+import 'express-async-errors';
 import connectToDatabase from './utils/databaseConnection';
 import middleware from './utils/middleware';
 
