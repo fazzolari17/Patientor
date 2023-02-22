@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node build/index.js",
-    "dev": "NODE_ENV=development ts-node-dev src/index.ts",
+    "dev": "ts-node-dev src/index.ts",
     "lint": "eslint --ext .tx",
     "format": "npx prettier --write .",
     "check": "npx prettier --check .",
-    "test": "NODE_ENV=test echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install && tsc",
     "tsc": "tsc"
   },
