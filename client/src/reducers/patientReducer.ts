@@ -30,8 +30,8 @@ const patientSlice = createSlice({
       return [...state, { id: [action.payload.id], ...action.payload }];
     },
     removePatientsFromState(state, action) {
-      return (state = action.payload)
-    }
+      return (state = action.payload);
+    },
   },
 });
 
@@ -88,13 +88,16 @@ export const useAddNewDiagnosesToPatient = (id: string, values: NewEntry) => {
 export const useRemovePatientsFromState = () => {
   return async (dispatch: Dispatch) => {
     try {
-      dispatch(removePatientsFromState(initialState))
-    } catch (error) {
-      
-    }
-  }
-}
+      dispatch(removePatientsFromState(initialState));
+    } catch (error) {}
+  };
+};
 
-export const { setAllPatients, addPatient, addEntryToPatient, updatePatient, removePatientsFromState } =
-  patientSlice.actions;
+export const {
+  setAllPatients,
+  addPatient,
+  addEntryToPatient,
+  updatePatient,
+  removePatientsFromState,
+} = patientSlice.actions;
 export default patientSlice.reducer;

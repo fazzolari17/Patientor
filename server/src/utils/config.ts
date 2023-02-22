@@ -8,8 +8,8 @@ const MONGODB_URI =
     ? process.env.TEST_MONGODB_URI
     : process.env.NODE_ENV === 'development'
     ? process.env.DEVELOPMENT_MONGODB_URI
-      : process.env.MONGODB_URI;
-    
+    : process.env.MONGODB_URI;
+
 const setJwtExpirationTime = () => {
   const oneDay = 60 * 60 * 24;
   return oneDay;
@@ -18,5 +18,5 @@ const setJwtExpirationTime = () => {
 export default {
   MONGODB_URI,
   PORT,
-  setJwtExpirationTime
+  setJwtExpirationTime,
 };

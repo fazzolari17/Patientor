@@ -45,7 +45,6 @@ export const useLogin = (credentials: ILoginCredentials) => {
     }
     dispatch(setUser(response));
     localStorage.setItem('loggedInUser', JSON.stringify(response));
-    
 
     const patients = await patientService.fetchAllPatients(response.token);
     if (patients === undefined)
@@ -64,13 +63,11 @@ export const useLogin = (credentials: ILoginCredentials) => {
 };
 
 export const useRemoveUserFromState = () => {
-   return async (dispatch: Dispatch) => {
+  return async (dispatch: Dispatch) => {
     try {
-      dispatch(removeUserFromState(initialState))
-    } catch (error) {
-      
-    }
-  }
+      dispatch(removeUserFromState(initialState));
+    } catch (error) {}
+  };
 };
 
 export const { setUser, removeUserFromState } = userSlice.actions;

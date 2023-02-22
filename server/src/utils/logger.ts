@@ -1,4 +1,4 @@
-const info = (...params: (string|number)[]) => {
+const info = (...params: (string | number)[]) => {
   if (process.env.NODE_ENV !== 'test') {
     console.log(...params);
   }

@@ -34,7 +34,7 @@ interface Props {
 
 const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
   const { diagnoses } = useSelector((state: RootState) => state);
-  
+
   return (
     <Formik
       initialValues={{

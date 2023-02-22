@@ -21,24 +21,26 @@ import { RootState } from '../../store';
 import { Diagnosis, Entry, Patient } from '../../types';
 
 interface IProps {
-  id: string,
-  openModal: () => void
+  id: string;
+  openModal: () => void;
 }
 const PatientDetailsPage = ({ id, openModal }: IProps) => {
   const { patients, diagnoses } = useSelector((state: RootState) => state);
-  const patient = patients.find(patient => patient.id === id);
+  const patient = patients.find((patient) => patient.id === id);
 
-  const [patientDiagnosesCodes, setPatientDiagnosesCodes] = React.useState<string[]>([]);
+  const [patientDiagnosesCodes, setPatientDiagnosesCodes] = React.useState<
+    string[]
+  >([]);
 
-  if(!patient) throw new Error("patient is not found");
-  
+  if (!patient) throw new Error('patient is not found');
+
   let codes: JSX.Element[] | [] = [];
   let entries: Entry = patient.entries[0];
   let entry: JSX.Element[] | [] = [];
 
-   const setDiagnosesCodesArray = (patient: Patient): void => {
+  const setDiagnosesCodesArray = (patient: Patient): void => {
     const { entries } = patient;
-    const codes: Array<Diagnosis["code"]> = [];
+    const codes: Array<Diagnosis['code']> = [];
     entries.forEach((entry) => {
       if (entry.diagnosisCodes) {
         for (let i = 0; i < entry.diagnosisCodes.length; i++) {
@@ -47,12 +49,12 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
         }
       }
     });
-     setPatientDiagnosesCodes(codes)
-   };
-  
+    setPatientDiagnosesCodes(codes);
+  };
+
   React.useEffect(() => {
-  setDiagnosesCodesArray(patient)
-}, [patients])
+    setDiagnosesCodesArray(patient);
+  }, [patients]);
 
   const renderCodes = () => {
     codes = patientDiagnosesCodes.map((item: string) => {
@@ -68,27 +70,29 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
   };
 
   const renderEntries = () => {
-     entry = patient.entries.map((entry: Entry) => (
-    <EntryDetails key={nanoid()} entry={entry}></EntryDetails>
-     ));
+    entry = patient.entries.map((entry: Entry) => (
+      <EntryDetails key={nanoid()} entry={entry}></EntryDetails>
+    ));
     return entry;
-  } 
+  };
 
   const renderGenderIcon = () => {
     const genderIconDecider =
-        patient.gender === 'male' ? <BsGenderMale /> : <BsGenderFemale />;
-  
-      const genderIcon = (
-        <IconContext.Provider value={{ color: 'red' }}>
-          {genderIconDecider}
-        </IconContext.Provider>
-      );
+      patient.gender === 'male' ? <BsGenderMale /> : <BsGenderFemale />;
+
+    const genderIcon = (
+      <IconContext.Provider value={{ color: 'red' }}>
+        {genderIconDecider}
+      </IconContext.Provider>
+    );
     return genderIcon;
-  }
+  };
 
   return (
-     <>
-      <h3>{patient.name} {renderGenderIcon()}</h3>
+    <>
+      <h3>
+        {patient.name} {renderGenderIcon()}
+      </h3>
       <p>SSN: {patient.ssn}</p>
       <p>OCCUPATION: {patient.occupation}</p>
       <Button variant="contained" onClick={() => openModal()}>
@@ -98,7 +102,7 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
       <ul>{renderCodes()}</ul>
       <Stack spacing={3}>{renderEntries()}</Stack>
     </>
-  )
+  );
 };
 
 export default PatientDetailsPage;

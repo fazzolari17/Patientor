@@ -2,13 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-
 // Types
-import {
-  NewEntry,
-  Patient,
-  Diagnosis,
-} from '../../types';
+import { NewEntry, Patient, Diagnosis } from '../../types';
 import { RootState } from '../../store';
 import { EntryFormValues } from '../../types';
 
@@ -31,7 +26,9 @@ import { setPatientDiagnoses } from '../../reducers/diagnosesReducer';
 const PatientPage = () => {
   const paramId = useParams().id;
   const dispatch = useAppDispatch();
-  const { user, patients, diagnoses } = useSelector((state: RootState) => state);
+  const { user, patients, diagnoses } = useSelector(
+    (state: RootState) => state
+  );
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
   let patient: Patient | undefined;
@@ -46,7 +43,7 @@ const PatientPage = () => {
 
   const setDiagnosesCodesArray = (patient: Patient): void => {
     const { entries } = patient;
-    const codes: Array<Diagnosis["code"]> = [];
+    const codes: Array<Diagnosis['code']> = [];
     entries.forEach((entry) => {
       if (entry.diagnosisCodes) {
         for (let i = 0; i < entry.diagnosisCodes.length; i++) {
@@ -57,16 +54,14 @@ const PatientPage = () => {
     });
     dispatch(setPatientDiagnoses(codes));
   };
-  
-  React.useEffect(() => {
-    patient = patients.find(patient => patient.id === paramId)
-    if (!patient) throw new Error("patient is not found");
-  
-    dispatch(useFetchIndividualPatientDataAndUpdateState(paramId))
-    setDiagnosesCodesArray(patient)
-  }, []);
 
- 
+  React.useEffect(() => {
+    patient = patients.find((patient) => patient.id === paramId);
+    if (!patient) throw new Error('patient is not found');
+
+    dispatch(useFetchIndividualPatientDataAndUpdateState(paramId));
+    setDiagnosesCodesArray(patient);
+  }, []);
 
   const submitNewEntry = async (values: EntryFormValues) => {
     let newEntry: NewEntry;
@@ -148,10 +143,9 @@ const PatientPage = () => {
     }
   };
 
-
   return (
     <>
-      <PatientDetailsPage id={paramId} openModal={openModal}  />
+      <PatientDetailsPage id={paramId} openModal={openModal} />
       <AddEntryModal
         modalOpen={modalOpen}
         onSubmit={submitNewEntry}

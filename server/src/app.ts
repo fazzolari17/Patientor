@@ -11,7 +11,6 @@ import loginRouter from './routes/login';
 
 const app = express();
 
-
 void connectToDatabase();
 app.use(express.static('front'));
 app.use(cors());

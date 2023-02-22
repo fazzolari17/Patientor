@@ -33,7 +33,7 @@ export interface BaseEntry {
     startDate: string;
     endDate: string;
   };
-  patient?: Types.ObjectId
+  patient?: Types.ObjectId;
 }
 
 export interface HospitalEntry extends BaseEntry {
@@ -95,7 +95,6 @@ export interface PatientEntry {
   entries: Entry[];
 }
 
-
 export interface MongoPatient {
   id: string;
   name: string;
@@ -113,7 +112,7 @@ export interface MongoDocument extends Document {
   ssn: string;
   gender: string;
   occupation: string;
-  entries: Entry[]
+  entries: Entry[];
 }
 
 export type AddNewPatient = Omit<PatientEntry, 'id' | 'entries'>;

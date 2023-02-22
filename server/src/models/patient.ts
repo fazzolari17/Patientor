@@ -1,8 +1,6 @@
 import entrySchema from './entry';
 
-import mongoose
-
-from 'mongoose';
+import mongoose from 'mongoose';
 import { PatientEntry } from '../types';
 
 const patientSchema = new mongoose.Schema<PatientEntry>({
@@ -14,7 +12,7 @@ const patientSchema = new mongoose.Schema<PatientEntry>({
   entries: [
     entrySchema.hospitalEntry,
     entrySchema.healthCheckEntry,
-    entrySchema.occupationalHealthcare
+    entrySchema.occupationalHealthcare,
   ],
 });
 

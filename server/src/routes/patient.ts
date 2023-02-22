@@ -1,10 +1,7 @@
 import express from 'express';
 import { RequestHandler } from 'express';
 import patientService from '../services/patientService';
-import {
-  AddNewPatient,
-  NewEntry
-} from '../types';
+import { AddNewPatient, NewEntry } from '../types';
 import utils from '../utils/utils';
 
 const patientRouter = express.Router();
@@ -41,7 +38,6 @@ patientRouter.put('/:id/entries', (async (req, res): Promise<void> => {
     const newEntry: NewEntry = utils.toNewEntry(body);
     const updatedPatient = await patientService.addNewEntry(id, newEntry);
     res.status(200).send(updatedPatient);
-    
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong';
     if (error instanceof Error) {
@@ -51,13 +47,12 @@ patientRouter.put('/:id/entries', (async (req, res): Promise<void> => {
   }
 }) as RequestHandler);
 
-patientRouter.post('/', ( async (req, res): Promise<void> => {
+patientRouter.post('/', (async (req, res): Promise<void> => {
   const body: AddNewPatient = req.body as AddNewPatient;
-  
+
   try {
     const newPatientEntry = utils.toNewPatientEntry(body);
     res.status(200).send(await patientService.addNewPatient(newPatientEntry));
-
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong';
     if (error instanceof Error) {

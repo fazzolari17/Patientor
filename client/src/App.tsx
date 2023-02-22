@@ -12,11 +12,19 @@ import { Typography } from '@material-ui/core';
 // Redux / Reducers
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from './store';
-import { setUser, useLogin, useRemoveUserFromState } from './reducers/userReducer';
-import { useFetchPatientList, setAllPatients, useRemovePatientsFromState } from './reducers/patientReducer';
+import {
+  setUser,
+  useLogin,
+  useRemoveUserFromState,
+} from './reducers/userReducer';
+import {
+  useFetchPatientList,
+  setAllPatients,
+  useRemovePatientsFromState,
+} from './reducers/patientReducer';
 
 // Types
-import {  RootState, } from './store';
+import { RootState } from './store';
 import { User, ILoggedInUser } from './types';
 
 // Components / Views
@@ -28,7 +36,11 @@ import LoginPage from './views/LoginPage/index';
 import PatientListPage from './views/PatientListPage';
 
 // Services
-import { setDiagnoses, useGetAllDiagnoses, useRemoveDiagnosesFromState } from './reducers/diagnosesReducer';
+import {
+  setDiagnoses,
+  useGetAllDiagnoses,
+  useRemoveDiagnosesFromState,
+} from './reducers/diagnosesReducer';
 
 const App = () => {
   const navigate = useNavigate();
@@ -41,7 +53,6 @@ const App = () => {
   const { patients } = useSelector((state: RootState) => state);
 
   React.useEffect(() => {
-
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
     const loggedInUserJSON = localStorage.getItem('loggedInUser');
@@ -52,8 +63,7 @@ const App = () => {
     //   localStorage.removeItem('loggedInUser');
     //   return navigate('/login');
     // };
-    
-    
+
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON);
       if (user.firstName !== null) {
@@ -90,7 +100,6 @@ const App = () => {
         console.log(error);
       }
     };
-
   }, []);
 
   const handleLogin = async (userToLogin: User) => {
@@ -98,7 +107,7 @@ const App = () => {
     if (loginResponse === 'user does not exist create an account') {
       return navigate('/sign%20up');
     } else if (loginResponse === 'invalid username or password') {
-      return navigate('login')
+      return navigate('login');
     }
     dispatch(useFetchPatientList());
     navigate('/home');

@@ -4,11 +4,11 @@ import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { parseString } from './utils';
 
 interface MiddleWare {
-  method: string,
-  path: string, 
-  body: string,
-  token: string, 
-  user: string
+  method: string;
+  path: string;
+  body: string;
+  token: string;
+  user: string;
 }
 const requestLogger = (
   request: Request,
@@ -31,7 +31,7 @@ const userExtractor = (
   next: NextFunction
 ) => {
   const requests = request as unknown as MiddleWare;
-  
+
   const secret = parseString('process.env.SECRET', process.env.SECRET);
   const decodedToken = jwt.verify(requests.token, secret) as jwt.JwtPayload;
 
@@ -45,7 +45,11 @@ const userExtractor = (
   return next();
 };
 
-const tokenExtractor = (request: Request, _response: Response, next: NextFunction) => {
+const tokenExtractor = (
+  request: Request,
+  _response: Response,
+  next: NextFunction
+) => {
   const requests: MiddleWare = request as unknown as MiddleWare;
   const authorization = request.get('authorization');
 
@@ -60,7 +64,12 @@ const unknownEndpoint = (_request: Request, response: Response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
-const errorHandler: ErrorRequestHandler = (error, _request: Request, response: Response, next: NextFunction) => {
+const errorHandler: ErrorRequestHandler = (
+  error,
+  _request: Request,
+  response: Response,
+  next: NextFunction
+) => {
   const errorMessage = parseString('error.message', error.message);
   logger.error(errorMessage);
 

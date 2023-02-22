@@ -1,4 +1,3 @@
-
 import data from '../data/patients';
 import {
   PatientEntry,
@@ -17,21 +16,19 @@ const findPatient = async (id: string): Promise<PatientEntry | null> => {
     return await Patient.findById(id);
   } catch (error: unknown) {
     const message = `Error retrieving patient from database: ${error}`;
-    
+
     throw new Error(message);
   }
-
 };
 
 const addNewPatient = async (entry: NewPatientEntry): Promise<PatientEntry> => {
-
   const patient = new Patient({
     name: entry.name,
     dateOfBirth: entry.dateOfBirth,
     ssn: entry.ssn,
     gender: entry.gender,
     occupation: entry.occupation,
-    entries: entry.entries
+    entries: entry.entries,
   });
 
   const response = await patient.save();
@@ -40,8 +37,7 @@ const addNewPatient = async (entry: NewPatientEntry): Promise<PatientEntry> => {
 };
 
 const getNonSensitivePatientEntries = async () => {
-
-  const response = Patient.find({}, { 'ssn': 0 });
+  const response = Patient.find({}, { ssn: 0 });
 
   return response;
 };
@@ -60,15 +56,20 @@ const getPatientEntries = (): MongoPatient[] => {
   );
 };
 
-const addNewEntry = async (id: string, entry: NewEntry): Promise<MongoDocument | null> => {
+const addNewEntry = async (
+  id: string,
+  entry: NewEntry
+): Promise<MongoDocument | null> => {
   try {
-
-    const updatedPatient = await Patient.findByIdAndUpdate(id,
-      { $push: { entries: entry } }, { new: true }) as MongoDocument;
+    const updatedPatient = (await Patient.findByIdAndUpdate(
+      id,
+      { $push: { entries: entry } },
+      { new: true }
+    )) as MongoDocument;
     return updatedPatient;
   } catch (error: unknown) {
     const message = `Error retrieving patient from database: ${error}`;
-    
+
     throw new Error(message);
   }
   const person = patientData.find((person) => person.id === id);

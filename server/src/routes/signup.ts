@@ -15,19 +15,19 @@ export interface IUser extends Document {
 
 userRouter.post('/', (async (req: Request, res: Response) => {
   const body: NewUser = req.body as NewUser;
-  
+
   const existingUser: Document | null = await User.findOne({
     email: body.email,
   });
-  
+
   if (existingUser) {
     return res.status(400).json({
       error: 'account already exists try logging in.',
     });
   }
-  
+
   const newUser = await userService.createNewUser(body);
-  
+
   return res.status(200).send(newUser);
 }) as RequestHandler);
 

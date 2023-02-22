@@ -36,7 +36,7 @@ const parseDate = (description: string, date: unknown): string => {
     throw new Error(`Incorrect or missing ${description}: ${date}`);
   }
 
-  return (new Date(date).toISOString().split('T')[0]);
+  return new Date(date).toISOString().split('T')[0];
 };
 
 export const parseString = (description: string, text: unknown): string => {
@@ -67,7 +67,6 @@ type Fields = {
 //   occupation: unknown;
 //   gender: unknown;
 // };
-
 
 // const fromDatabase = ({
 
@@ -148,10 +147,10 @@ const parseDiagnoses = (diagnoses: unknown): Array<Diagnoses['code']> => {
 };
 
 export const assertNever = (value: never): never => {
-    throw new Error(
-      `Unhandled discriminated union member : ${JSON.stringify(value)}`
-    );
-  };
+  throw new Error(
+    `Unhandled discriminated union member : ${JSON.stringify(value)}`
+  );
+};
 
 const toNewEntry = (entry: EntryFields): NewEntry => {
   let newEntry: NewEntry;

@@ -147,4 +147,4 @@
 //       return state;
 //   }
 // };
-export default {}
+export default {};

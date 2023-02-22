@@ -109,7 +109,7 @@ export const parseMongoReceivedData = ({
   dateOfBirth,
   ssn,
   occupation,
-  gender
+  gender,
 }: MongoFields) => {
   const patient: MongoResponse = {
     id: parseString(id),

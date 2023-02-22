@@ -37,7 +37,7 @@ const diagnosesSlice = createSlice({
     },
     removeDiagnosesFromState(state, action) {
       return (state = action.payload);
-    }
+    },
   },
 });
 
@@ -63,8 +63,9 @@ export const useSetPatientDiagnoses = (codes: Array<Diagnosis['code']>) => {
 export const useRemoveDiagnosesFromState = () => {
   return (dispatch: Dispatch) => {
     dispatch(removeDiagnosesFromState(initialState));
-  }
-}
+  };
+};
 
-export const { setDiagnoses, setPatientDiagnoses, removeDiagnosesFromState } = diagnosesSlice.actions;
+export const { setDiagnoses, setPatientDiagnoses, removeDiagnosesFromState } =
+  diagnosesSlice.actions;
 export default diagnosesSlice.reducer;

@@ -7,7 +7,6 @@ import { apiBaseUrl } from '../constants';
 import { Entry, NewEntry, Patient } from '../types';
 import { PatientFormValues } from '../views/AddPatientModal/AddPatientForm';
 
-
 const fetchAllPatients = async (token?: string) => {
   let response;
   try {

@@ -35,4 +35,4 @@
 // };
 // export const useStateValue = () => useContext(StateContext);
 
-export default {}
+export default {};

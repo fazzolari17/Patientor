@@ -18,13 +18,15 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
     const userToLogin = await User.findOne({
       email: body.email,
     });
-    
-    if (!userToLogin) {
-      return response.status(400).json({
-        error: 'user does not exist create an account',
-      }).end();
-    }
 
+    if (!userToLogin) {
+      return response
+        .status(400)
+        .json({
+          error: 'user does not exist create an account',
+        })
+        .end();
+    }
 
     const passwordCorrect: boolean =
       userToLogin === null
@@ -44,7 +46,9 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
 
     const secret = parseString('process.env.SECRET', process.env.SECRET);
 
-    const token = jwt.sign(userForToken, secret, { expiresIn: config.setJwtExpirationTime() });
+    const token = jwt.sign(userForToken, secret, {
+      expiresIn: config.setJwtExpirationTime(),
+    });
 
     return response.status(200).send({
       token,
