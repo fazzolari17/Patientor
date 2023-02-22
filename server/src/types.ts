@@ -1,3 +1,5 @@
+import { Document, Types } from 'mongoose';
+
 export interface Diagnoses {
   code: string;
   name: string;
@@ -9,6 +11,18 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
+export interface MongoBaseEntry {
+  id: string;
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: Array<Diagnoses['code']>;
+  sickLeave?: {
+    startDate: string;
+    endDate: string;
+  };
+}
+
 export interface BaseEntry {
   id: string;
   description: string;
@@ -19,6 +33,7 @@ export interface BaseEntry {
     startDate: string;
     endDate: string;
   };
+  patient?: Types.ObjectId
 }
 
 export interface HospitalEntry extends BaseEntry {
@@ -80,8 +95,28 @@ export interface PatientEntry {
   entries: Entry[];
 }
 
+
+export interface MongoPatient {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  ssn: string;
+  gender: string;
+  occupation: string;
+  entries: Entry[];
+}
+
+export interface MongoDocument extends Document {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  ssn: string;
+  gender: string;
+  occupation: string;
+  entries: Entry[]
+}
+
 export type AddNewPatient = Omit<PatientEntry, 'id' | 'entries'>;
-export type Patient = Omit<PatientEntry, 'entries'>;
 export type NonSensitivePatientEntries = Omit<PatientEntry, 'ssn'>;
 
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown

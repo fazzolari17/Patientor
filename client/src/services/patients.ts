@@ -50,7 +50,7 @@ const addNewPatient = async (values: PatientFormValues) => {
 
 const addDiagnosesToPatient = async (paramId: string, newEntry: NewEntry) => {
   try {
-    const { data }: { data: Entry } = await axios.post(
+    const { data }: { data: Entry } = await axios.put(
       `${apiBaseUrl}/patients/${paramId}/entries`,
       newEntry
     );

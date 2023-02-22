@@ -85,6 +85,44 @@ export const parseRecievedData = ({
   return patient;
 };
 
+type MongoFields = {
+  id: unknown;
+  name: unknown;
+  dateOfBirth: unknown;
+  ssn: unknown;
+  occupation: unknown;
+  gender: unknown;
+};
+
+interface MongoResponse {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  ssn: string;
+  occupation: string;
+  gender: string;
+}
+
+export const parseMongoReceivedData = ({
+  id,
+  name,
+  dateOfBirth,
+  ssn,
+  occupation,
+  gender
+}: MongoFields) => {
+  const patient: MongoResponse = {
+    id: parseString(id),
+    name: parseString(name),
+    dateOfBirth: parseDate('date of birth', dateOfBirth),
+    ssn: parseSsn(ssn),
+    occupation: parseOccupation(occupation),
+    gender: parseGender(gender),
+  };
+
+  return patient;
+};
+
 export const parseDiagnoses = (
   diagnoses: unknown
 ): Array<Diagnosis['code']> => {

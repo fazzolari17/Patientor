@@ -1,49 +1,17 @@
 import express from 'express';
 import cors from 'cors';
-import { parseString } from './utils/utils';
+import 'express-async-errors';
+import connectToDatabase from './utils/databaseConnection';
+import middleware from './utils/middleware';
 
 import diagnosesRouter from './routes/diagnoses';
 import patientRouter from './routes/patient';
 import userRouter from './routes/signup';
 import loginRouter from './routes/login';
-import config from '../src/utils/config';
-import logger from '../src/utils/logger';
-import middleware from './utils/middleware';
-import mongoose from 'mongoose';
 
 const app = express();
 
-const MONGODB_URI = parseString('MONGODB_URI', config.MONGODB_URI);
 
-logger.info('Connecting to', MONGODB_URI);
-const start = Date.now();
-logger.info();
-// mongoose
-//   .connect(MONGODB_URI)
-//   .then(() => { 
-//     logger.info('connected to MongoDB');
-//     logger.info(Date.now() - start);
-//   })
-//   .catch((error) => {
-//     if (typeof error === 'string') {
-//       logger.info(error);
-//     } else if (error instanceof Error) {
-//       logger.error('Error connecting to MongoDB:', error.message);
-//     }
-//   });
-  const connectToDatabase = async (): Promise<void> => {
-    try {
-      await mongoose.connect(MONGODB_URI);
-      logger.info('connected to MongoDB');
-         logger.info(Date.now() - start);
-    } catch (error) {
-      if (typeof error === 'string') {
-        logger.info(error);
-      } else if (error instanceof Error) {
-        logger.error('Error connecting to MongoDB:', error.message);
-      }
-    }
-  };
 void connectToDatabase();
 app.use(express.static('front'));
 app.use(cors());
@@ -62,9 +30,11 @@ app.get('/api/health', (_req, res) => {
   res.status(200).send('200 ok');
 });
 
-app.use('/api/diagnoses', diagnosesRouter);
-app.use('/api/patients', patientRouter);
 app.use('/api/signup', userRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/diagnoses', middleware.userExtractor, diagnosesRouter);
+app.use('/api/patients', middleware.userExtractor, patientRouter);
 
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 export default app;

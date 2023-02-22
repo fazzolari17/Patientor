@@ -78,7 +78,7 @@ const errorHandler: ErrorRequestHandler = (error, _request: Request, response: R
       error: 'invalid token',
     });
   } else if (error.name === 'TokenExpiredError') {
-    return response.status(401).json({
+    return response.status(401).send({
       error: 'token expired',
     });
   }

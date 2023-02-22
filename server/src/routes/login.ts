@@ -3,17 +3,18 @@ import bcrypt from 'bcrypt';
 import express, { Request, RequestHandler, Response } from 'express';
 import User from '../models/user';
 import { parseString } from '../utils/utils';
+import config from '../utils/config';
 
 const loginRouter = express.Router();
 
-interface LoginCredentials {
+interface ILoginCredentials {
   email: string;
   password: string;
 }
 
 loginRouter.post('/', (async (request: Request, response: Response) => {
   try {
-    const body: LoginCredentials = request.body as LoginCredentials;
+    const body: ILoginCredentials = request.body as ILoginCredentials;
     const userToLogin = await User.findOne({
       email: body.email,
     });
@@ -42,7 +43,7 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
 
     const secret = parseString('process.env.SECRET', process.env.SECRET);
 
-    const token = jwt.sign(userForToken, secret, { expiresIn: 60 * 60 });
+    const token = jwt.sign(userForToken, secret, { expiresIn: config.setJwtExpirationTime() });
 
     return response.status(200).send({
       token,

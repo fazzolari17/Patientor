@@ -1,0 +1,2 @@
+Handle the problem that when the server is down to not return an undefined object for user, patients, diagnoses etc.
+  make sure that data is put into local storage if it is undefinedand that you are routed to an error page etc.

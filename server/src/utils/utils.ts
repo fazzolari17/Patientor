@@ -35,7 +35,8 @@ const parseDate = (description: string, date: unknown): string => {
   if (!date || !isString(date) || !isDate(date)) {
     throw new Error(`Incorrect or missing ${description}: ${date}`);
   }
-  return date;
+
+  return (new Date(date).toISOString().split('T')[0]);
 };
 
 export const parseString = (description: string, text: unknown): string => {
@@ -58,6 +59,19 @@ type Fields = {
   gender: unknown;
 };
 
+// type FieldsFromDB = {
+//   _id: unknown
+//   name: unknown;
+//   dateOfBirth: unknown;
+//   ssn: unknown;
+//   occupation: unknown;
+//   gender: unknown;
+// };
+
+
+// const fromDatabase = ({
+
+// })
 const toNewPatientEntry = ({
   name,
   dateOfBirth,
@@ -133,6 +147,12 @@ const parseDiagnoses = (diagnoses: unknown): Array<Diagnoses['code']> => {
   return codes;
 };
 
+export const assertNever = (value: never): never => {
+    throw new Error(
+      `Unhandled discriminated union member : ${JSON.stringify(value)}`
+    );
+  };
+
 const toNewEntry = (entry: EntryFields): NewEntry => {
   let newEntry: NewEntry;
   const diagnoses = !entry.diagnosesCodes
@@ -158,10 +178,10 @@ const toNewEntry = (entry: EntryFields): NewEntry => {
           criteria: parseString('criteria', entry.discharge.criteria),
         },
       };
-      return newEntry;
+      // return newEntry;
       break;
     case 'OccupationalHealthcare':
-      newEntry = {
+      return {
         date: parseDate('Occupational Date', entry.date),
         type: 'OccupationalHealthcare',
         specialist: parseString('specialist', entry.specialist),
@@ -169,10 +189,10 @@ const toNewEntry = (entry: EntryFields): NewEntry => {
         diagnosisCodes: diagnoses,
         employerName: parseString('employer name', entry.employerName),
       };
-      return newEntry;
+
       break;
     case 'HealthCheck':
-      newEntry = {
+      return {
         date: parseDate('HealthCheck Date', entry.date),
         type: 'HealthCheck',
         specialist: parseString('specialist', entry.specialist),

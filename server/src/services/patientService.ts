@@ -1,45 +1,52 @@
+
 import data from '../data/patients';
 import {
-  Patient,
   PatientEntry,
-  NonSensitivePatientEntries,
   NewPatientEntry,
   NewEntry,
-  Entry,
+  MongoPatient,
+  MongoDocument,
 } from '../types';
-import { v1 as uuid } from 'uuid';
 
-let patientData: Array<PatientEntry> = data;
+import Patient from '../models/patient';
 
-const findPatient = (id: string): PatientEntry | unknown => {
-  const patientFound = data.find((patient) => patient.id === id);
-  return { ...patientFound };
+const patientData: Array<PatientEntry> = data;
+
+const findPatient = async (id: string): Promise<PatientEntry | null> => {
+  try {
+    return await Patient.findById(id);
+  } catch (error: unknown) {
+    const message = `Error retrieving patient from database: ${error}`;
+    
+    throw new Error(message);
+  }
+
 };
 
-const addNewPatient = (entry: NewPatientEntry): PatientEntry => {
-  const newPatientEntry = {
-    id: uuid(),
-    ...entry,
-    entries: [],
-  };
-  data.push(newPatientEntry);
-  return newPatientEntry;
+const addNewPatient = async (entry: NewPatientEntry): Promise<PatientEntry> => {
+
+  const patient = new Patient({
+    name: entry.name,
+    dateOfBirth: entry.dateOfBirth,
+    ssn: entry.ssn,
+    gender: entry.gender,
+    occupation: entry.occupation,
+    entries: entry.entries
+  });
+
+  const response = await patient.save();
+
+  return response;
 };
 
-const getNonSensitivePatientEntries = (): NonSensitivePatientEntries[] => {
-  return patientData.map(
-    ({ id, name, dateOfBirth, gender, occupation, entries }) => ({
-      id,
-      name,
-      dateOfBirth,
-      gender,
-      occupation,
-      entries,
-    })
-  );
+const getNonSensitivePatientEntries = async () => {
+
+  const response = Patient.find({}, { 'ssn': 0 });
+
+  return response;
 };
 
-const getPatientEntries = (): Patient[] => {
+const getPatientEntries = (): MongoPatient[] => {
   return patientData.map(
     ({ id, name, dateOfBirth, gender, occupation, entries, ssn }) => ({
       id,
@@ -53,80 +60,21 @@ const getPatientEntries = (): Patient[] => {
   );
 };
 
-const addNewEntry = (id: string, entry: NewEntry): Entry => {
+const addNewEntry = async (id: string, entry: NewEntry): Promise<MongoDocument | null> => {
+  try {
+
+    const updatedPatient = await Patient.findByIdAndUpdate(id,
+      { $push: { entries: entry } }, { new: true }) as MongoDocument;
+    console.log('UpdatedPatient', updatedPatient);
+    return updatedPatient;
+  } catch (error: unknown) {
+    const message = `Error retrieving patient from database: ${error}`;
+    
+    throw new Error(message);
+  }
   const person = patientData.find((person) => person.id === id);
   if (person === undefined) {
     throw new Error('Person Not Found');
-  }
-
-  const assertNever = (value: never): never => {
-    throw new Error(
-      `Unhandled discriminated union member : ${JSON.stringify(value)}`
-    );
-  };
-
-  let updatedPerson: PatientEntry;
-  let newEntry: Entry;
-  switch (entry.type) {
-    case 'Hospital':
-      newEntry = {
-        id: uuid(),
-        date: entry.date,
-        specialist: entry.specialist,
-        type: entry.type,
-        description: entry.description,
-        diagnosisCodes: entry.diagnosisCodes,
-        discharge: entry.discharge,
-      };
-
-      updatedPerson = {
-        ...person,
-        entries: [...person.entries, { ...newEntry }],
-      };
-
-      patientData = patientData.map((patient) =>
-        patient.id === id ? updatedPerson : patient
-      );
-      return newEntry;
-      break;
-    case 'HealthCheck':
-      newEntry = {
-        id: uuid(),
-        date: entry.date,
-        specialist: entry.specialist,
-        type: entry.type,
-        description: entry.description,
-        healthCheckRating: entry.healthCheckRating,
-      };
-      updatedPerson = {
-        ...person,
-        entries: [...person.entries, { ...newEntry }],
-      };
-      patientData = patientData.map((patient) =>
-        patient.id === id ? updatedPerson : patient
-      );
-      return newEntry;
-      break;
-    case 'OccupationalHealthcare':
-      newEntry = {
-        id: uuid(),
-        date: entry.date,
-        specialist: entry.specialist,
-        type: 'OccupationalHealthcare',
-        description: entry.description,
-        employerName: entry.employerName,
-      };
-      updatedPerson = {
-        ...person,
-        entries: [...person.entries, { ...newEntry }],
-      };
-      patientData = patientData.map((patient) =>
-        patient.id === id ? updatedPerson : patient
-      );
-      return newEntry;
-      break;
-    default:
-      return assertNever(entry);
   }
 };
 

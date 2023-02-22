@@ -1,28 +1,10 @@
-import express from 'express';
-import cors from 'cors';
+import app from './app';
+import http from 'http';
+import config from './utils/config';
+import logger from './utils/logger';
 
-import diagnosesRouter from './routes/diagnoses';
-import patientRouter from './routes/patient';
+const server = http.createServer(app);
 
-const app = express();
-const PORT = process.env.PORT || 3001;
-
-app.use(express.static('front'));
-app.use(cors());
-app.use(express.json());
-
-app.get('/api/ping', (_req, res) => {
-  console.log(`Someone Pinged Here`);
-  res.status(200).send('pong');
-});
-
-app.get('/api/health', (_req, res) => {
-  res.status(200).send('200 ok');
-});
-
-app.use('/api/diagnoses', diagnosesRouter);
-app.use('/api/patients', patientRouter);
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`);
 });
