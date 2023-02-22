@@ -56,7 +56,7 @@ export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
     const data = new FormData(event.currentTarget);
 
     const userToLogin = {
-      email: parseString(data.get('email')),
+      email: parseString(data.get('email')).toLowerCase(),
       password: parseString(data.get('password')),
     };
 
