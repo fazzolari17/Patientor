@@ -18,9 +18,9 @@ const requestLogger = (request, _response, next) => {
 };
 const userExtractor = (request, response, next) => {
     const requests = request;
-    const token = (0, utils_1.parseString)('middleware token', requests.token);
+    // const token = parseString('middleware token', requests.token);
     const secret = (0, utils_1.parseString)('process.env.SECRET', process.env.SECRET);
-    const decodedToken = jsonwebtoken_1.default.verify(token, secret);
+    const decodedToken = jsonwebtoken_1.default.verify(requests.token, secret);
     if (!decodedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' });
     }

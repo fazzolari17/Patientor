@@ -48,6 +48,12 @@ const App = () => {
     const patientsInLocalStorage = localStorage.getItem('patients');
     const diagnosesInLocalStorage = localStorage.getItem('diagnoses');
     // Fix this mess
+    // if (loggedInUserJSON === 'undefined') {
+    //   localStorage.removeItem('loggedInUser');
+    //   return navigate('/login');
+    // };
+    
+    
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON);
       if (user.firstName !== null) {
@@ -88,7 +94,12 @@ const App = () => {
   }, []);
 
   const handleLogin = async (userToLogin: User) => {
-    dispatch(useLogin(userToLogin));
+    const loginResponse = await dispatch(useLogin(userToLogin));
+    if (loginResponse === 'user does not exist create an account') {
+      return navigate('/sign%20up');
+    } else if (loginResponse === 'invalid username or password') {
+      return navigate('login')
+    }
     dispatch(useFetchPatientList());
     navigate('/home');
     setIsLoggedIn(true);

@@ -57,7 +57,7 @@ export const useFetchIndividualPatientDataAndUpdateState = (id: string) => {
       if (!patient) return;
       dispatch(updatePatient(patient));
     } catch (error) {
-      console.error(error.response.data);
+      console.error(error);
     }
   };
 };

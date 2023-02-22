@@ -25,10 +25,10 @@ loginRouter.post('/', ((request, response) => __awaiter(void 0, void 0, void 0, 
         const userToLogin = yield user_1.default.findOne({
             email: body.email,
         });
-        if (userToLogin === null) {
-            response.send(400).send({
+        if (!userToLogin) {
+            return response.status(400).json({
                 error: 'user does not exist create an account',
-            });
+            }).end();
         }
         const passwordCorrect = userToLogin === null
             ? false
@@ -53,7 +53,8 @@ loginRouter.post('/', ((request, response) => __awaiter(void 0, void 0, void 0, 
         });
     }
     catch (error) {
-        return response.status(400).send({ error });
+        console.log('ERROR', { error });
+        return response.end().status(400).send({ error }).end();
     }
 })));
 exports.default = loginRouter;

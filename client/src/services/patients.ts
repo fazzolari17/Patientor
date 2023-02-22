@@ -18,10 +18,9 @@ const fetchAllPatients = async (token?: string) => {
     } else {
       response = await axios.get<Patient[]>(`${apiBaseUrl}/patients`);
     }
-    if (response.status === 200) return response.data;
-    return;
+    return response.data;
   } catch (error) {
-    console.error(error.response.data);
+    console.error(error);
   }
 };
 
@@ -32,7 +31,7 @@ const fetchIndividualPatientData = async (patientId: string) => {
     );
     return patient;
   } catch (error) {
-    console.error(error.response.data);
+    console.error(error);
   }
 };
 
@@ -44,7 +43,7 @@ const addNewPatient = async (values: PatientFormValues) => {
     );
     return newPatient;
   } catch (error) {
-    console.error(error.response.data);
+    console.error(error);
   }
 };
 
@@ -56,7 +55,7 @@ const addDiagnosesToPatient = async (paramId: string, newEntry: NewEntry) => {
     );
     return data;
   } catch (error) {
-    console.error(error.response.data);
+    console.error(error);
   }
 };
 

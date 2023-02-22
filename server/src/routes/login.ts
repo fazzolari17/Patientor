@@ -18,12 +18,13 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
     const userToLogin = await User.findOne({
       email: body.email,
     });
-
-    if (userToLogin === null) {
-      response.send(400).send({
+    
+    if (!userToLogin) {
+      return response.status(400).json({
         error: 'user does not exist create an account',
-      });
+      }).end();
     }
+
 
     const passwordCorrect: boolean =
       userToLogin === null
@@ -53,7 +54,8 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
       id: userToLogin._id,
     });
   } catch (error) {
-    return response.status(400).send({ error });
+    console.log('ERROR', { error });
+    return response.end().status(400).send({ error }).end();
   }
 }) as RequestHandler);
 

@@ -14,7 +14,7 @@ const fetchDiagnosesFromApi = async (token?: string) => {
     }
     if (response.status === 200) return response.data;
   } catch (error) {
-    console.error(error.response.data);
+    console.error(error);
   }
 };
 

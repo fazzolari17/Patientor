@@ -38,8 +38,14 @@ const userSlice = createSlice({
 export const useLogin = (credentials: ILoginCredentials) => {
   return async (dispatch: Dispatch) => {
     const response = await loginService.login(credentials);
+    if (response.error.response.status >= 400) {
+      const message = response.error.response.data.error;
+      alert(message);
+      return response.error.response.data.error;
+    }
     dispatch(setUser(response));
     localStorage.setItem('loggedInUser', JSON.stringify(response));
+    
 
     const patients = await patientService.fetchAllPatients(response.token);
     if (patients === undefined)

@@ -12,7 +12,7 @@ const login = async (credentials: ILoginCredentials) => {
 
     return response.data;
   } catch (error) {
-    return console.log(error);
+    return {error};
   }
 };
 

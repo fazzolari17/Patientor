@@ -31,10 +31,9 @@ const userExtractor = (
   next: NextFunction
 ) => {
   const requests = request as unknown as MiddleWare;
-  const token = parseString('middleware token', requests.token);
-
+  
   const secret = parseString('process.env.SECRET', process.env.SECRET);
-  const decodedToken = jwt.verify(token, secret) as jwt.JwtPayload;
+  const decodedToken = jwt.verify(requests.token, secret) as jwt.JwtPayload;
 
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' });
