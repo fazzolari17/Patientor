@@ -10,7 +10,7 @@
     "format": "npx prettier --write .",
     "check": "npx prettier --check .",
     "test": "NODE_ENV=test echo \"Error: no test specified\" && exit 1",
-    "build": "npm install && npm run tsc",
+    "build": "npm install && tsc",
     "tsc": "tsc"
   },
   "author": "Giuseppe Fazzolari",
