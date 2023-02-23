@@ -14,6 +14,7 @@ import { RootState } from '../../store';
 import { PatientFormValues } from '../AddPatientModal/AddPatientForm';
 
 // Components / Views
+import SearchBar from './searchBar';
 import AddPatientModal from '../AddPatientModal';
 import HealthRatingBar from '../../components/HealthRatingBar';
 
@@ -29,12 +30,17 @@ import {
   useSetPatientDiagnoses,
 } from '../../reducers/diagnosesReducer';
 
+
 const PatientListPage = () => {
   const { patients } = useSelector((state: RootState) => state);
   const dispatch = useAppDispatch();
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
+  const [searchValue, setSearchValue] = React.useState<string>('');
+  const [searchFilterValue, setSearchFilterValue] = React.useState<string>('name');
+  const [genderFilterValue, setGenderFilterValue] = React.useState<string[]>([]);
+  const [sortPatientList, setSortPatientList] = React.useState<string>('');
 
   const openModal = (): void => setModalOpen(true);
 
@@ -60,11 +66,72 @@ const PatientListPage = () => {
     }
   };
 
+  const handleSortPatients = (sortCriteria: string, patients: Patient[] ): Patient[] => {
+    if (!sortCriteria) {
+      return patients
+    };
+    sortCriteria = sortCriteria.toLowerCase();
+    switch (sortCriteria) {
+      case 'ascending':
+        return [...patients].sort((a, b) => a.name.localeCompare(b.name));
+      case 'decending':
+        return [...patients].sort((a, b) => b.name.localeCompare(a.name));
+      default:
+        return patients;
+    }
+  };
+
+  const handleFilterByGender = (filter: string[], patients: Patient[]): Patient[] => {
+    if (genderFilterValue.length < 1) {
+      return patients;
+    } else {
+      return patients.filter(patient => genderFilterValue.includes(patient.gender))
+    }
+
+  }
+
+
+  const handleSearch = (value: string, patients: Array<Patient>): Patient[] => {
+    patients = handleFilterByGender(genderFilterValue, patients);
+    patients = handleSortPatients(sortPatientList, patients)
+   if (searchFilterValue === 'occupation') {
+      return patients.filter(patient => {
+        const occupation = (patient.occupation).toLowerCase();
+        if (!value) return patient;
+    
+        if (occupation.includes(value)) {
+          return patient;
+        }
+      })  
+    } else {
+      return patients.filter(patient => {
+        const name = (patient.name).toLowerCase();
+        if (!value) return patient;
+    
+        if (name.includes(value)) {
+          return patient;
+        }
+      })  
+    }
+  };
+
   return (
     <div className="App">
       <Box>
         <Typography align="center" variant="h6">
           Patient list
+        </Typography>
+        <Typography align="left" variant="h6">
+          <SearchBar
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            searchFilterValue={searchFilterValue}
+            setSearchFilterValue={setSearchFilterValue}
+            genderFilterValue={genderFilterValue}
+            setGenderFilterValue={setGenderFilterValue}
+            sortPatientList={sortPatientList}
+            setSortPatientList={setSortPatientList}
+            />
         </Typography>
       </Box>
       <Table style={{ marginBottom: '1em' }}>
@@ -77,7 +144,7 @@ const PatientListPage = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.values(patients).map((patient: Patient) => (
+          {Object.values(handleSearch(searchValue, patients)).map((patient: Patient) => (
             <TableRow key={patient.id}>
               <TableCell>
                 <Link to={`/patients/${patient.id}`}>{patient.name}</Link>
