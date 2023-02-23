@@ -185,6 +185,11 @@ export default function Menu({
           <MenuItem handleClick={() => navigate('home')} label={'home'} />
           <MenuItem
             disabled={isLoggedIn ? false : true}
+            handleClick={() => navigate('weather')}
+            label={'weather'}
+          />
+          <MenuItem
+            disabled={isLoggedIn ? false : true}
             handleClick={() => navigate('patients')}
             label={'patients'}
           />
