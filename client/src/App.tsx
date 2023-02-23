@@ -41,6 +41,7 @@ import {
   useGetAllDiagnoses,
   useRemoveDiagnosesFromState,
 } from './reducers/diagnosesReducer';
+import WeatherPage from './views/WeatherPage';
 
 const App = () => {
   const navigate = useNavigate();
@@ -147,7 +148,8 @@ const App = () => {
               element={<HomePage isLoggedIn={isLoggedIn} />}
             />
 
-            <Route path={'/patients/'} element={<PatientListPage />} />
+            <Route path={'/weather'} element={<WeatherPage />} />
+            <Route path={'/patients'} element={<PatientListPage />} />
             <Route path={'/patients/:id'} element={<PatientPage />} />
             <Route path="/sign%20up" element={<SignUp />} />
             <Route
