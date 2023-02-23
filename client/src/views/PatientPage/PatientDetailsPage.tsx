@@ -37,6 +37,10 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
   let codes: JSX.Element[] | [] = [];
   let entries: Entry = patient.entries[0];
   let entry: JSX.Element[] | [] = [];
+  
+  React.useEffect(() => {
+    setDiagnosesCodesArray(patient);
+  }, [patients]);
 
   const setDiagnosesCodesArray = (patient: Patient): void => {
     const { entries } = patient;
@@ -51,10 +55,6 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
     });
     setPatientDiagnosesCodes(codes);
   };
-
-  React.useEffect(() => {
-    setDiagnosesCodesArray(patient);
-  }, [patients]);
 
   const renderCodes = () => {
     codes = patientDiagnosesCodes.map((item: string) => {
