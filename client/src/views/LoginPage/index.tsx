@@ -23,34 +23,21 @@ import { parseString } from '../../utils/utils';
 import loginService from '../../services/login';
 
 // Types
-import { User } from '../../types';
+import { ILoginCredentials } from '../../types';
 
-function Copyright(props: any) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {'Copyright © '}
-      <Link color="inherit" href="https://www.giuseppefazzolari.com/">
-        Created by: Giuseppe Fazzolari
-      </Link>{' '}
-      {2023}
-      {'.'}
-    </Typography>
-  );
+// Components / Views
+import Copyright from '../../components/Copyright';
+
+interface SignInProps {
+  handleLogin: (arg0: ILoginCredentials) => Promise<void>;
+  handleLogout: () => void;
 }
 
 const theme = createTheme();
 
-interface SignInProps {
-  handleLogin: (arg0: User) => Promise<void>;
-  handleLogout: () => void;
-}
-
 export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
+  const [checkbox, setCheckbox] = React.useState<boolean>(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -58,6 +45,7 @@ export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
     const userToLogin = {
       email: parseString(data.get('email')).toLowerCase(),
       password: parseString(data.get('password')),
+      rememberMe: checkbox,
     };
 
     handleLogin(userToLogin);
@@ -108,7 +96,14 @@ export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
               autoComplete="current-password"
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox
+                  onClick={(e) => setCheckbox((prev) => !prev)}
+                  id="check"
+                  value="remember"
+                  color="primary"
+                />
+              }
               label="Remember me"
             />
             <Button
@@ -133,7 +128,6 @@ export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );

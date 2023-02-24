@@ -30,7 +30,6 @@ import {
   useSetPatientDiagnoses,
 } from '../../reducers/diagnosesReducer';
 
-
 const PatientListPage = () => {
   const { patients } = useSelector((state: RootState) => state);
   const dispatch = useAppDispatch();
@@ -38,8 +37,11 @@ const PatientListPage = () => {
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
   const [searchValue, setSearchValue] = React.useState<string>('');
-  const [searchFilterValue, setSearchFilterValue] = React.useState<string>('name');
-  const [genderFilterValue, setGenderFilterValue] = React.useState<string[]>([]);
+  const [searchFilterValue, setSearchFilterValue] =
+    React.useState<string>('name');
+  const [genderFilterValue, setGenderFilterValue] = React.useState<string[]>(
+    []
+  );
   const [sortPatientList, setSortPatientList] = React.useState<string>('');
 
   const openModal = (): void => setModalOpen(true);
@@ -66,10 +68,13 @@ const PatientListPage = () => {
     }
   };
 
-  const handleSortPatients = (sortCriteria: string, patients: Patient[] ): Patient[] => {
+  const handleSortPatients = (
+    sortCriteria: string,
+    patients: Patient[]
+  ): Patient[] => {
     if (!sortCriteria) {
-      return patients
-    };
+      return patients;
+    }
     sortCriteria = sortCriteria.toLowerCase();
     switch (sortCriteria) {
       case 'ascending':
@@ -81,37 +86,40 @@ const PatientListPage = () => {
     }
   };
 
-  const handleFilterByGender = (filter: string[], patients: Patient[]): Patient[] => {
+  const handleFilterByGender = (
+    filter: string[],
+    patients: Patient[]
+  ): Patient[] => {
     if (genderFilterValue.length < 1) {
       return patients;
     } else {
-      return patients.filter(patient => genderFilterValue.includes(patient.gender))
+      return patients.filter((patient) =>
+        genderFilterValue.includes(patient.gender)
+      );
     }
-
-  }
-
+  };
 
   const handleSearch = (value: string, patients: Array<Patient>): Patient[] => {
     patients = handleFilterByGender(genderFilterValue, patients);
-    patients = handleSortPatients(sortPatientList, patients)
-   if (searchFilterValue === 'occupation') {
-      return patients.filter(patient => {
-        const occupation = (patient.occupation).toLowerCase();
+    patients = handleSortPatients(sortPatientList, patients);
+    if (searchFilterValue === 'occupation') {
+      return patients.filter((patient) => {
+        const occupation = patient.occupation.toLowerCase();
         if (!value) return patient;
-    
+
         if (occupation.includes(value)) {
           return patient;
         }
-      })  
+      });
     } else {
-      return patients.filter(patient => {
-        const name = (patient.name).toLowerCase();
+      return patients.filter((patient) => {
+        const name = patient.name.toLowerCase();
         if (!value) return patient;
-    
+
         if (name.includes(value)) {
           return patient;
         }
-      })  
+      });
     }
   };
 
@@ -131,7 +139,7 @@ const PatientListPage = () => {
             setGenderFilterValue={setGenderFilterValue}
             sortPatientList={sortPatientList}
             setSortPatientList={setSortPatientList}
-            />
+          />
         </Typography>
       </Box>
       <Table style={{ marginBottom: '1em' }}>
@@ -144,18 +152,20 @@ const PatientListPage = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.values(handleSearch(searchValue, patients)).map((patient: Patient) => (
-            <TableRow key={patient.id}>
-              <TableCell>
-                <Link to={`/patients/${patient.id}`}>{patient.name}</Link>
-              </TableCell>
-              <TableCell>{patient.gender}</TableCell>
-              <TableCell>{patient.occupation}</TableCell>
-              <TableCell>
-                <HealthRatingBar showText={false} rating={1} />
-              </TableCell>
-            </TableRow>
-          ))}
+          {Object.values(handleSearch(searchValue, patients)).map(
+            (patient: Patient) => (
+              <TableRow key={patient.id}>
+                <TableCell>
+                  <Link to={`/patients/${patient.id}`}>{patient.name}</Link>
+                </TableCell>
+                <TableCell>{patient.gender}</TableCell>
+                <TableCell>{patient.occupation}</TableCell>
+                <TableCell>
+                  <HealthRatingBar showText={false} rating={1} />
+                </TableCell>
+              </TableRow>
+            )
+          )}
         </TableBody>
       </Table>
       <AddPatientModal

@@ -21,13 +21,15 @@ import MailIcon from '@mui/icons-material/Mail';
 
 // Types
 import { FC } from 'react';
-import { User } from '../types';
+import { ILoginCredentials, User } from '../types';
 
 // Components
 import MenuItem from '../components/MenuItem';
 
 import { RouterProps, useNavigate } from 'react-router-dom';
 import { capitalized, uppercase } from '../utils/helperFunctions';
+import Copyright from '../components/Copyright';
+
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -82,7 +84,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 interface IDrawerProps {
   children: React.ReactElement;
   isLoggedIn: boolean;
-  handleLogin: (arg0: User) => Promise<void>;
+  handleLogin: (arg0: ILoginCredentials) => Promise<void>;
   handleLogout: () => void;
 }
 
@@ -222,6 +224,15 @@ export default function Menu({
       <Main open={open}>
         <DrawerHeader />
         {children}
+        <Copyright
+          sx={{ mt: 5, mb: 4 }}
+          style={{
+            position: 'fixed',
+            bottom: 15,
+            left: 'calc(50% - 170px)',
+            width: '340px',
+          }}
+        />
       </Main>
     </Box>
   );

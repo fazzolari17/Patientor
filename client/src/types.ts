@@ -9,6 +9,7 @@ export interface ILoggedInUser {
 export interface ILoginCredentials {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 export interface User {
