@@ -25,7 +25,7 @@ import {
 
 // Types
 import { RootState } from './store';
-import { User, ILoggedInUser } from './types';
+import { User, ILoggedInUser, ILoginCredentials } from './types';
 
 // Components / Views
 import Menu from './Menu';
@@ -103,7 +103,7 @@ const App = () => {
     };
   }, []);
 
-  const handleLogin = async (userToLogin: User) => {
+  const handleLogin = async (userToLogin: ILoginCredentials) => {
     const loginResponse = await dispatch(useLogin(userToLogin));
 
     if (loginResponse === 'user does not exist create an account') {
