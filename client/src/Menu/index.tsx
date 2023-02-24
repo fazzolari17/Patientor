@@ -185,11 +185,12 @@ export default function Menu({
         {/* Top Menu List */}
         <List>
           <MenuItem handleClick={() => navigate('home')} label={'home'} />
-          <MenuItem
+          {/* Enable weather when the funcitonality has been wired up */}
+          {/* <MenuItem
             disabled={isLoggedIn ? false : true}
             handleClick={() => navigate('weather')}
             label={'weather'}
-          />
+          /> */}
           <MenuItem
             disabled={isLoggedIn ? false : true}
             handleClick={() => navigate('patients')}
