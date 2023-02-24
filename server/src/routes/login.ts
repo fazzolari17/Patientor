@@ -10,6 +10,7 @@ const loginRouter = express.Router();
 interface ILoginCredentials {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 loginRouter.post('/', (async (request: Request, response: Response) => {
@@ -45,9 +46,9 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
     };
 
     const secret = parseString('process.env.SECRET', process.env.SECRET);
-
+ 
     const token = jwt.sign(userForToken, secret, {
-      expiresIn: config.setJwtExpirationTime(),
+      expiresIn: config.setJwtExpirationTime(body.rememberMe),
     });
 
     return response.status(200).send({

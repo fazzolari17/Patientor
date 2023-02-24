@@ -37,7 +37,7 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
   let codes: JSX.Element[] | [] = [];
   let entries: Entry = patient.entries[0];
   let entry: JSX.Element[] | [] = [];
-  
+
   React.useEffect(() => {
     setDiagnosesCodesArray(patient);
   }, [patients]);

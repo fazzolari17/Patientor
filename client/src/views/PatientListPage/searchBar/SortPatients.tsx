@@ -17,15 +17,11 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Ascending',
-  'Decending',
-];
-
+const names = ['Ascending', 'Decending'];
 
 interface Props {
-  sortPatientList: string
-  setSortPatientList: React.Dispatch<React.SetStateAction<string>>
+  sortPatientList: string;
+  setSortPatientList: React.Dispatch<React.SetStateAction<string>>;
 }
 const SortPatientList = ({ sortPatientList, setSortPatientList }: Props) => {
   const handleChange = (event: SelectChangeEvent<typeof sortPatientList>) => {
@@ -48,10 +44,7 @@ const SortPatientList = ({ sortPatientList, setSortPatientList }: Props) => {
           MenuProps={MenuProps}
         >
           {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-            >
+            <MenuItem key={name} value={name}>
               {name}
             </MenuItem>
           ))}
@@ -59,6 +52,6 @@ const SortPatientList = ({ sortPatientList, setSortPatientList }: Props) => {
       </FormControl>
     </div>
   );
-}
+};
 
 export default SortPatientList;

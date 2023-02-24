@@ -10,9 +10,14 @@ const MONGODB_URI =
     ? process.env.DEVELOPMENT_MONGODB_URI
     : process.env.MONGODB_URI;
 
-const setJwtExpirationTime = () => {
+const setJwtExpirationTime = (rememberMe: boolean) => {
   const oneDay = 60 * 60 * 24;
-  return oneDay;
+  const fourWeeks = '28d'; 
+  if (rememberMe) {
+    return fourWeeks;
+  } else {
+    return oneDay;
+  }
 };
 
 export default {

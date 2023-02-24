@@ -18,26 +18,20 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Male',
-  'Female',
-  'Other',
-];
-
+const names = ['Male', 'Female', 'Other'];
 
 interface Props {
-  genderFilterValue: string[],
-  setGenderFilterValue: React.Dispatch<React.SetStateAction<string[]>>
+  genderFilterValue: string[];
+  setGenderFilterValue: React.Dispatch<React.SetStateAction<string[]>>;
 }
 const GenderSelector = ({ genderFilterValue, setGenderFilterValue }: Props) => {
-
   const handleChange = (event: SelectChangeEvent<typeof genderFilterValue>) => {
     const {
       target: { value },
     } = event;
     setGenderFilterValue(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === 'string' ? value.split(',') : value
     );
   };
 
@@ -65,6 +59,6 @@ const GenderSelector = ({ genderFilterValue, setGenderFilterValue }: Props) => {
       </FormControl>
     </div>
   );
-}
+};
 
 export default GenderSelector;
