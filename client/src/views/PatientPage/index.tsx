@@ -18,17 +18,15 @@ import { assertNever, parseString } from '../../utils/utils';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../store';
 import {
-  useAddNewDiagnosesToPatient,
-  useFetchIndividualPatientDataAndUpdateState,
+  addNewDiagnosesToPatient,
+  fetchIndividualPatientDataAndUpdateState,
 } from '../../reducers/patientReducer';
 import { setPatientDiagnoses } from '../../reducers/diagnosesReducer';
 
 const PatientPage = () => {
   const paramId = useParams().id;
   const dispatch = useAppDispatch();
-  const { user, patients, diagnoses } = useSelector(
-    (state: RootState) => state
-  );
+  const { patients } = useSelector((state: RootState) => state);
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
   let patient: Patient | undefined;
@@ -56,10 +54,11 @@ const PatientPage = () => {
   };
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     patient = patients.find((patient) => patient.id === paramId);
     if (!patient) throw new Error('patient is not found');
 
-    dispatch(useFetchIndividualPatientDataAndUpdateState(paramId));
+    dispatch(fetchIndividualPatientDataAndUpdateState(paramId));
     setDiagnosesCodesArray(patient);
   }, []);
 
@@ -129,7 +128,7 @@ const PatientPage = () => {
     }
 
     try {
-      dispatch(useAddNewDiagnosesToPatient(paramId, newEntry));
+      dispatch(addNewDiagnosesToPatient(paramId, newEntry));
       closeModal();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

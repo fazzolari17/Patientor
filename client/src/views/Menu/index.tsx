@@ -12,23 +12,13 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-
-// Types
-import { FC } from 'react';
-import { ILoginCredentials, User } from '../types';
 
 // Components
-import MenuItem from '../components/MenuItem';
+import MenuItem from '../../components/MenuItem';
 
-import { RouterProps, useNavigate } from 'react-router-dom';
-import { capitalized, uppercase } from '../utils/helperFunctions';
-import Copyright from '../components/Copyright';
+import { useNavigate } from 'react-router-dom';
+import { uppercase } from '../../utils/helperFunctions';
+import Copyright from '../../components/Copyright';
 
 const drawerWidth = 240;
 
@@ -84,23 +74,13 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 interface IDrawerProps {
   children: React.ReactElement;
   isLoggedIn: boolean;
-  handleLogin: (arg0: ILoginCredentials) => Promise<void>;
   handleLogout: () => void;
 }
 
-export default function Menu({
-  children,
-  isLoggedIn,
-  handleLogin,
-  handleLogout,
-}: IDrawerProps) {
+const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
-
-  const loginLogoutName: string = isLoggedIn ? 'logout' : 'login';
-
-  const bottomDrawerMenu = ['Account', loginLogoutName];
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -234,4 +214,6 @@ export default function Menu({
       </Main>
     </Box>
   );
-}
+};
+
+export default Menu;

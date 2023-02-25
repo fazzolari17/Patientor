@@ -6,29 +6,22 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { apiBaseUrl } from './constants';
 
 // material ui
-import { Button, Divider, Container } from '@material-ui/core';
-import { Typography } from '@material-ui/core';
+import { Divider, Container } from '@material-ui/core';
 
 // Redux / Reducers
-import { useSelector } from 'react-redux';
 import { useAppDispatch } from './store';
+import { setUser, login, removeUserFromState } from './reducers/userReducer';
 import {
-  setUser,
-  useLogin,
-  useRemoveUserFromState,
-} from './reducers/userReducer';
-import {
-  useFetchPatientList,
+  fetchPatientList,
   setAllPatients,
-  useRemovePatientsFromState,
+  removePatientsFromState,
 } from './reducers/patientReducer';
 
 // Types
-import { RootState } from './store';
-import { User, ILoggedInUser, ILoginCredentials } from './types';
+import { ILoginCredentials } from './types';
 
 // Components / Views
-import Menu from './Menu';
+import Menu from './views/Menu';
 import SignUp from './views/SignUp/SignUp';
 import HomePage from './views/Home/HomePage';
 import PatientPage from './views/PatientPage';
@@ -38,8 +31,8 @@ import PatientListPage from './views/PatientListPage';
 // Services
 import {
   setDiagnoses,
-  useGetAllDiagnoses,
-  useRemoveDiagnosesFromState,
+  getAllDiagnoses,
+  removeDiagnosesFromState,
 } from './reducers/diagnosesReducer';
 import WeatherPage from './views/WeatherPage';
 
@@ -49,9 +42,6 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
   const dispatch = useAppDispatch();
-  const userEmail = useSelector((state: ILoggedInUser) => state.email);
-  const { user } = useSelector((state: RootState) => state);
-  const { patients } = useSelector((state: RootState) => state);
 
   React.useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
@@ -68,8 +58,8 @@ const App = () => {
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON);
       if (user.firstName !== null) {
-        void dispatch(useFetchPatientList(user.token));
-        void dispatch(useGetAllDiagnoses(user.token));
+        void dispatch(fetchPatientList(user.token));
+        void dispatch(getAllDiagnoses(user.token));
         setIsLoggedIn(true);
         axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
         dispatch(setUser(user));
@@ -91,27 +81,17 @@ const App = () => {
     } else if (!loggedInUserJSON) {
       localStorage.removeItem('user');
     }
+  }, [dispatch]);
 
-    const fetchDiagnosis = () => {
-      try {
-        // const getDiagnosesAndSaveToStore = getAllDiagnoses();
-        // getDiagnosesAndSaveToStore(dispatch)
-        // dispatch(getAllDiagnoses());
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  }, []);
-
-  const handleLogin = async (userToLogin: ILoginCredentials) => {
-    const loginResponse = await dispatch(useLogin(userToLogin));
+  const handleLogin = async (userToLogin: ILoginCredentials): Promise<void> => {
+    const loginResponse = await dispatch(login(userToLogin));
 
     if (loginResponse === 'user does not exist create an account') {
       return navigate('/sign%20up');
     } else if (loginResponse === 'invalid username or password') {
       return navigate('login');
     }
-    dispatch(useFetchPatientList());
+    dispatch(fetchPatientList());
     navigate('/home');
     setIsLoggedIn(true);
   };
@@ -119,20 +99,16 @@ const App = () => {
   const handleLogout = async () => {
     navigate('/home');
     setIsLoggedIn(false);
-    dispatch(useRemoveUserFromState());
-    dispatch(useRemovePatientsFromState());
-    dispatch(useRemoveDiagnosesFromState());
+    dispatch(removeUserFromState());
+    dispatch(removePatientsFromState());
+    dispatch(removeDiagnosesFromState());
     localStorage.removeItem('loggedInUser');
     localStorage.removeItem('patients');
     localStorage.removeItem('diagnoses');
   };
 
   return (
-    <Menu
-      handleLogin={handleLogin}
-      handleLogout={handleLogout}
-      isLoggedIn={isLoggedIn}
-    >
+    <Menu handleLogout={handleLogout} isLoggedIn={isLoggedIn}>
       <div className="App">
         <Container>
           {/* <Typography variant="h3" style={{ marginBottom: "0.5em" }}>

@@ -21,7 +21,7 @@ const SearchBox = ({ searchValue, setSearchValue }: Props) => {
         label="Search"
         variant="outlined"
         value={searchValue}
-        onChange={(event) => setSearchValue(event.target.value)}
+        onChange={(event) => setSearchValue(event.target.value.toLowerCase())}
       />
     </Box>
   );

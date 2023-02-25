@@ -21,14 +21,7 @@ import HealthRatingBar from '../../components/HealthRatingBar';
 // Redux
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../store';
-import {
-  useAddNewPatient,
-  useFetchPatientList,
-} from '../../reducers/patientReducer';
-import {
-  useGetAllDiagnoses,
-  useSetPatientDiagnoses,
-} from '../../reducers/diagnosesReducer';
+import { addNewPatient } from '../../reducers/patientReducer';
 
 const PatientListPage = () => {
   const { patients } = useSelector((state: RootState) => state);
@@ -53,7 +46,7 @@ const PatientListPage = () => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      await dispatch(useAddNewPatient(values));
+      await dispatch(addNewPatient(values));
       closeModal();
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {

@@ -29,13 +29,13 @@ const userSlice = createSlice({
     setUser(state, action) {
       return (state = action.payload);
     },
-    removeUserFromState(state, action) {
+    removeUser(state, action) {
       return (state = action.payload);
     },
   },
 });
 
-export const useLogin = (credentials: ILoginCredentials) => {
+export const login = (credentials: ILoginCredentials) => {
   return async (dispatch: Dispatch) => {
     const response = await loginService.login(credentials);
 
@@ -66,13 +66,15 @@ export const useLogin = (credentials: ILoginCredentials) => {
   };
 };
 
-export const useRemoveUserFromState = () => {
+export const removeUserFromState = () => {
   return async (dispatch: Dispatch) => {
     try {
-      dispatch(removeUserFromState(initialState));
-    } catch (error) {}
+      dispatch(removeUser(initialState));
+    } catch (error) {
+      console.error(error);
+    }
   };
 };
 
-export const { setUser, removeUserFromState } = userSlice.actions;
+export const { setUser, removeUser } = userSlice.actions;
 export default userSlice.reducer;
