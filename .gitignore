@@ -1,9 +1,12 @@
-server/build
-
+# Directories
 client/build
-
-buildfront
-
+server/build
+server/front/
 node_modules 
+
+# Environment
+.env
+
+
 .DS_Store
 .DS_Store
