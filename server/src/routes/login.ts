@@ -46,7 +46,7 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
     };
 
     const secret = parseString('process.env.SECRET', process.env.SECRET);
- 
+
     const token = jwt.sign(userForToken, secret, {
       expiresIn: config.setJwtExpirationTime(body.rememberMe),
     });

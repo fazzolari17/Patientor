@@ -222,12 +222,15 @@ export default function Menu({
         </List>
       </Drawer>
 
-      <Main open={open} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Main
+        open={open}
+        style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+      >
         <DrawerHeader />
         {children}
-        <div style={{  marginTop: 'auto' }}>
-        <Copyright sx={{ mt: 5, mb: 4 }} />
-          </div>
+        <div style={{ marginTop: 'auto' }}>
+          <Copyright sx={{ mt: 5, mb: 4 }} />
+        </div>
       </Main>
     </Box>
   );
