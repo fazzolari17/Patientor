@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+cd client
+npm run lint-front
+
+cd ../
+
+cd server
+npm run lint-back
+# npm test
