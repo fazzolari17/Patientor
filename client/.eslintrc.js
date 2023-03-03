@@ -10,6 +10,8 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
     'plugin:jsx-a11y/strict',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -22,12 +24,13 @@ module.exports = {
   plugins: ['react', 'jsx-a11y', '@typescript-eslint'],
   rules: {
     'react-hooks/exhaustive-deps': 'error',
-    'no-var': 'error',
     'brace-style': 'error',
     'prefer-template': 'error',
     radix: 'error',
     'space-before-blocks': 'error',
     'import/prefer-default-export': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
   overrides: [
     {
