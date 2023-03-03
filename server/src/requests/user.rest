@@ -1,0 +1,38 @@
+@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2Nzc4MDQ5MTQsImV4cCI6MTY3Nzg5MTMxNH0.ZUeCrHpBPtbKGvl6Z98p2kQ29lOkVH_k9nkFpvZP400
+@userId=63f0593b412273dc48613063
+@PORT=3001
+# Sign Up Route
+POST http://localhost:{{PORT}}/api/signup
+Content-Type: application/json
+
+{
+  "firstName": "root",
+  "lastName": "user",
+  "email": "root@gmail.com",
+  "password": "password"
+}
+
+# Login Routes
+###
+POST http://localhost:{{PORT}}/api/login
+Content-Type: application/json
+
+{
+  "email": "root@gmail.com",
+  "password": "password"
+}
+
+# Update User Weather Location Data
+###
+Post http://localhost:{{PORT}}/api/user/addweather?userId={{userId}}
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Sylva",
+    "lat": 35.3737111,
+    "lon": -83.2259803,
+    "country": "US",
+    "state": "North Carolina",
+    "id": "328d92cd-14e0-43cd-8c91-f6136662bac8"
+  }

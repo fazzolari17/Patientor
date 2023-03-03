@@ -1,0 +1,18 @@
+@PORT=3001
+
+@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2Nzc0MjE2NjEsImV4cCI6MTY3NzUwODA2MX0.Iu_8AaSLN-t-OgsWkBYZnPfDSvmQT7SGlLh1QIaZm1E
+@city=sylva
+@cityQuery=city={{city}}
+
+@latitude=35.3737111
+@latQuery=lat={{latitude}}
+@longitude=-83.2259803
+@lonQuery=lon={{longitude}}
+# get lat and lon from the weather api 
+POST http://localhost:{{PORT}}/api/weather/geoCode?{{cityQuery}}
+Authorization: {{token}}
+
+###
+# get weather data from api 
+POST http://localhost:{{PORT}}/api/weather/q?{{latQuery}}&{{lonQuery}}
+Authorization: {{token}}

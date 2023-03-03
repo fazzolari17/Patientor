@@ -4,7 +4,7 @@ import { NewUser } from '../services/userService';
 import { Document } from 'mongoose';
 import User from '../models/user';
 
-const userRouter = express.Router();
+const signupRouter = express.Router();
 
 export interface IUser extends Document {
   email: string;
@@ -13,7 +13,7 @@ export interface IUser extends Document {
   passwordHash: string;
 }
 
-userRouter.post('/', (async (req: Request, res: Response) => {
+signupRouter.post('/', (async (req: Request, res: Response) => {
   const body: NewUser = req.body as NewUser;
 
   const existingUser: Document | null = await User.findOne({
@@ -39,4 +39,4 @@ userRouter.post('/', (async (req: Request, res: Response) => {
 //   response.json(users)
 // })
 
-export default userRouter;
+export default signupRouter;
