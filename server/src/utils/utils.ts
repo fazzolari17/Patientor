@@ -1,4 +1,6 @@
+import { GeoCodeData } from '../services/weatherService';
 import { NewPatientEntry, Gender, NewEntry, Diagnoses } from '../types';
+import { v4 as uuid } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isGender = (param: any): param is Gender => {
@@ -49,6 +51,18 @@ export const parseString = (description: string, text: unknown): string => {
 
 export const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
+};
+
+const isNumber = (number: unknown): number is number => {
+  return typeof number === 'number' || number instanceof Number;
+};
+
+const parseNumber = (description: string, number: unknown): number => {
+  if (!number || !isNumber(number)) {
+    throw new Error(`Incorrect or missing ${description}`);
+  }
+
+  return number;
 };
 
 type Fields = {
@@ -148,7 +162,7 @@ const parseDiagnoses = (diagnoses: unknown): Array<Diagnoses['code']> => {
 
 export const assertNever = (value: never): never => {
   throw new Error(
-    `Unhandled discriminated union member : ${JSON.stringify(value)}`
+    `Unhandled discriminated union member : ${JSON.stringify(value)}`,
   );
 };
 
@@ -160,7 +174,7 @@ const toNewEntry = (entry: EntryFields): NewEntry => {
 
   const assertNever = (value: never): never => {
     throw new Error(
-      `Unhandled discriminated union member : ${JSON.stringify(value)}`
+      `Unhandled discriminated union member : ${JSON.stringify(value)}`,
     );
   };
 
@@ -209,4 +223,238 @@ const toNewEntry = (entry: EntryFields): NewEntry => {
 export default {
   toNewPatientEntry,
   toNewEntry,
+};
+
+export interface ResponseData {
+  name: unknown;
+  lat: unknown;
+  lon: unknown;
+  country: unknown;
+  state: unknown;
+}
+
+export const parseGeoCodeResponse = ({
+  name,
+  lat,
+  lon,
+  country,
+  state,
+}: ResponseData): GeoCodeData => {
+  const data: GeoCodeData = {
+    name: parseString('geoCodeResponseName', name),
+    lat: parseNumber('geoCodeResponselat', lat),
+    lon: parseNumber('geoCodeResponselon', lon),
+    country: parseString('geoCodeResponseCountry', country),
+    state: parseString('geoCodeResponseState', state),
+    id: uuid(),
+  };
+
+  return data;
+};
+
+export interface WeatherDataResponse {
+  coord: {
+    lon: unknown;
+    lat: unknown;
+  };
+  weather: [
+    {
+      id: unknown;
+      main: unknown;
+      description: unknown;
+      icon: unknown;
+    },
+  ];
+  base: unknown;
+  main: {
+    temp: unknown;
+    feels_like: unknown;
+    temp_min: unknown;
+    temp_max: unknown;
+    pressure: unknown;
+    humidity: unknown;
+    sea_level: unknown;
+    grnd_level: unknown;
+  };
+  visibility: unknown;
+  wind: {
+    speed: unknown;
+    deg: unknown;
+    gust?: unknown;
+  };
+  clouds: {
+    all: unknown;
+  };
+  dt: unknown;
+  sys: {
+    type: unknown;
+    id: unknown;
+    country: unknown;
+    sunrise: unknown;
+    sunset: unknown;
+  };
+  timezone: unknown;
+  id: unknown;
+  name: unknown;
+  cod: unknown;
+}
+
+export interface WeatherData {
+  coord: {
+    lon: number;
+    lat: number;
+  };
+  weather: [
+    {
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    },
+  ];
+  base: string;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    pressure: number;
+    humidity: number;
+    sea_level?: number;
+    grnd_level?: number;
+  };
+  visibility: number;
+  wind?: {
+    speed?: number;
+    deg?: number;
+    gust?: number;
+  };
+  clouds: {
+    all: number;
+  };
+  dt: number;
+  sys: {
+    type: number;
+    id: number;
+    country: string;
+    sunrise: number;
+    sunset: number;
+  };
+  timezone: number;
+  id: number;
+  name: string;
+  cod: number;
+}
+
+export const parseWeatherDataResponse = (props: any): WeatherData => {
+  return {
+    coord: {
+      lon: parseNumber('weatherDataResponse lon', props.coord.lon),
+      lat: parseNumber('weatherDataResponse lat', props.coord.lat),
+    },
+    weather: [
+      {
+        id: parseNumber('weatherDataResponse id', props.weather[0].id),
+        main: parseString('weatherDataResponse main', props.weather[0].main),
+        description: parseString(
+          'weatherDataResponse description',
+          props.weather[0].description,
+        ),
+        icon: parseString('weatherDataResponse icon', props.weather[0].icon),
+      },
+    ],
+    base: parseString('weatherDataResponse base', props.base),
+    main: {
+      temp: parseNumber('weatherDataResponse temp', props.main.temp),
+      feels_like: parseNumber(
+        'weatherDataResponse feels_like',
+        props.main.feels_like,
+      ),
+      temp_min: parseNumber(
+        'weatherDataResponse temp_min',
+        props.main.temp_min,
+      ),
+      temp_max: parseNumber(
+        'weatherDataResponse temp_max',
+        props.main.temp_max,
+      ),
+      pressure: parseNumber(
+        'weatherDataResponse pressure',
+        props.main.pressure,
+      ),
+      humidity: parseNumber(
+        'weatherDataResponse humidity',
+        props.main.humidity,
+      ),
+      sea_level: props.main.sea_level
+        ? parseNumber('weatherDataResponse sea_level', props.main.sea_level)
+        : undefined,
+      grnd_level: props.main.grnd_level
+        ? parseNumber('weatherDataResponse grnd_level', props.main.grnd_level)
+        : undefined,
+    },
+    visibility: parseNumber('weatherDataResponse visibility', props.visibility),
+    wind: {
+      speed: props.wind.speed
+        ? parseNumber('weatherDataResponse speed', props.wind.speed)
+        : undefined,
+      deg: props.wind.deg
+        ? parseNumber('weatherDataResponse deg', props.wind.deg)
+        : undefined,
+      gust: props.wind.gust
+        ? parseNumber('weatherDataResponse gust', props.wind.gust)
+        : undefined,
+    },
+    clouds: {
+      all: parseNumber('weatherDataResponse all', props.clouds.all),
+    },
+    dt: parseNumber('weatherDataResponse dt', props.dt),
+    sys: {
+      type: parseNumber('weatherDataResponse type', props.sys.type),
+      id: parseNumber('weatherDataResponse id', props.sys.id),
+      country: parseString('weatherDataResponse country', props.sys.country),
+      sunrise: parseNumber('weatherDataResponse sunrise', props.sys.sunrise),
+      sunset: parseNumber('weatherDataResponse sunset', props.sys.sunset),
+    },
+    timezone: parseNumber('weatherDataResponse timezone', props.timezone),
+    id: parseNumber('weatherDataResponse id', props.id),
+    name: parseString('weatherDataResponse name', props.name),
+    cod: parseNumber('weatherDataResponse cod', props.cod),
+  };
+};
+
+interface UpdateWeatherDataFields {
+  name: unknown;
+  lat: unknown;
+  lon: unknown;
+  state: unknown;
+  country: unknown;
+  id: unknown;
+}
+
+export interface WeatherLocationData {
+  name: string;
+  lat: number;
+  lon: number;
+  state: string;
+  country: string;
+  id: string;
+}
+
+export const parseUserUpdateWeatherData = ({
+  name,
+  lat,
+  lon,
+  state,
+  country,
+  id,
+}: UpdateWeatherDataFields): WeatherLocationData => {
+  return {
+    name: parseString('missing or incorrect name', name),
+    lat: parseNumber('missing or incorrect lat', lat),
+    lon: parseNumber('missing or incorrect lon', lon),
+    state: parseString('missing or incorrect state', state),
+    country: parseString('missing or incorrect country', country),
+    id: parseString('missing or incorrect id', id),
+  };
 };
