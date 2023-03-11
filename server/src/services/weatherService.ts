@@ -1,12 +1,15 @@
 import axios from 'axios';
 import {
+  ForecastResponseFromApi,
+  ForecastWeatherData,
+  parseForecast,
   parseGeoCodeResponse,
   parseWeatherDataResponse,
   ResponseData,
   WeatherData,
 } from '../utils/utils';
 
-const openWeatherApiKey = process.env.OPENWEATHER_API_KEY;
+const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
 const weatherUnits = 'imperial';
 
 export interface GeoCodeData {
@@ -23,7 +26,7 @@ const fetchLatandLonFromApi = async (
 ): Promise<GeoCodeData[] | undefined> => {
   try {
     const response = await axios.get(
-      `https://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=100&appid=${openWeatherApiKey}`,
+      `https://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=100&appid=${OPENWEATHER_API_KEY}`,
     );
     const data = response.data as ResponseData[];
     return data.map((a) => parseGeoCodeResponse(a));
@@ -33,15 +36,15 @@ const fetchLatandLonFromApi = async (
   }
 };
 
-const fetchWeatherDataFromApi = async (
+const fetchCurrentWeatherDataFromApi = async (
   latitude: unknown,
   longitude: unknown,
 ): Promise<WeatherData | undefined> => {
   try {
     const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${openWeatherApiKey}&units=${weatherUnits}`,
+      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}&units=${weatherUnits}`,
     );
-    console.log(response.data);
+
     return parseWeatherDataResponse(response.data);
   } catch (error) {
     console.error(error);
@@ -49,4 +52,28 @@ const fetchWeatherDataFromApi = async (
   }
 };
 
-export default { fetchLatandLonFromApi, fetchWeatherDataFromApi };
+const fetchForecastWeatherDataFromApi = async (
+  latitude: unknown,
+  longitude: unknown,
+  forecastLength: unknown,
+): Promise<ForecastWeatherData | undefined> => {
+  try {
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&cnt=${forecastLength}&appid=${OPENWEATHER_API_KEY}&units=${weatherUnits}`,
+    );
+
+    const sanitizedForecast = parseForecast(
+      response.data as ForecastResponseFromApi,
+    );
+    return sanitizedForecast;
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+};
+
+export default {
+  fetchLatandLonFromApi,
+  fetchCurrentWeatherDataFromApi,
+  fetchForecastWeatherDataFromApi,
+};
