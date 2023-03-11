@@ -1,21 +1,28 @@
+import './services/interceptors';
 import React from 'react';
 import axios from 'axios';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+
+// Router
+import { Route, Routes } from 'react-router-dom';
 
 // constants
-import { apiBaseUrl } from './constants';
+import { API_BASE_URI } from './constants';
 
 // material ui
 import { Divider, Container } from '@material-ui/core';
 
 // Redux / Reducers
 import { useAppDispatch } from './store';
-import { setUser, login, removeUserFromState } from './reducers/userReducer';
 import {
-  fetchPatientList,
-  setAllPatients,
-  removePatientsFromState,
-} from './reducers/patientReducer';
+  addHourlyForecastData,
+  addDailyForecastData,
+  addWeatherData,
+  fetchCurrentWeatherData,
+  fetchForecastWeatherData,
+} from './reducers/weatherReducer';
+import { setUser, login, logout } from './reducers/userReducer';
+import { fetchPatientList, setAllPatients } from './reducers/patientReducer';
+import { setIsLoggedIn } from './reducers/authReducer';
 
 // Types
 import { ILoginCredentials } from './types';
@@ -29,40 +36,79 @@ import LoginPage from './views/LoginPage/index';
 import PatientListPage from './views/PatientListPage';
 
 // Services
-import {
-  setDiagnoses,
-  getAllDiagnoses,
-  removeDiagnosesFromState,
-} from './reducers/diagnosesReducer';
+import { setDiagnoses, getAllDiagnoses } from './reducers/diagnosesReducer';
+
+//  Component / Views
 import WeatherPage from './views/WeatherPage';
 
-const App = () => {
-  const navigate = useNavigate();
+import { useSelector } from 'react-redux';
+import { RootState } from './store';
 
-  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
+const App = () => {
+  const {
+    auth: { isLoggedIn },
+  } = useSelector((state: RootState) => state);
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    void axios.get<void>(`${apiBaseUrl}/ping`);
+    void axios.get<void>(`${API_BASE_URI}/health`);
+    checkAndLoadDataFromLocalstorage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
+  const checkAndLoadDataFromLocalstorage = () => {
     const loggedInUserJSON = localStorage.getItem('loggedInUser');
+    const authTokenInLocalStorage = localStorage.getItem('authorization');
     const patientsInLocalStorage = localStorage.getItem('patients');
     const diagnosesInLocalStorage = localStorage.getItem('diagnoses');
-    // Fix this mess
-    // if (loggedInUserJSON === 'undefined') {
-    //   localStorage.removeItem('loggedInUser');
-    //   return navigate('/login');
-    // };
+    const weatherInLocalStorage = localStorage.getItem('weather');
+    const hourlyForecastInLocalStorage = localStorage.getItem('hourlyForecast');
+    const dailyForecastInLocalStorage = localStorage.getItem('dailyForecast');
 
+    // Checks for data in localStorage and loads it into State if it is there
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON);
+
       if (user.firstName !== null) {
-        void dispatch(fetchPatientList(user.token));
-        void dispatch(getAllDiagnoses(user.token));
-        setIsLoggedIn(true);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+        if (authTokenInLocalStorage) {
+          const auth = JSON.parse(authTokenInLocalStorage);
+          axios.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${auth.token}`;
+        }
+        dispatch(fetchPatientList(user.token));
+        dispatch(getAllDiagnoses(user.token));
+        dispatch(setIsLoggedIn(true));
         dispatch(setUser(user));
+        dispatch(
+          fetchCurrentWeatherData(
+            user.weatherLocationData.lat,
+            user.weatherLocationData.lon
+          )
+        );
+        dispatch(
+          fetchForecastWeatherData(
+            user.weatherLocationData.lat,
+            user.weatherLocationData.lon
+          )
+        );
+
+        if (weatherInLocalStorage) {
+          const weather = JSON.parse(weatherInLocalStorage);
+          dispatch(addWeatherData(weather));
+        }
+
+        if (hourlyForecastInLocalStorage) {
+          const hourlyForecast = JSON.parse(hourlyForecastInLocalStorage);
+          dispatch(addHourlyForecastData(hourlyForecast));
+        }
+
+        if (dailyForecastInLocalStorage) {
+          const dailyForecast = JSON.parse(dailyForecastInLocalStorage);
+          dispatch(addDailyForecastData(dailyForecast));
+        }
+
         if (patientsInLocalStorage) {
           const patients = JSON.parse(patientsInLocalStorage);
           if (patients.length === 0) return;
@@ -81,35 +127,19 @@ const App = () => {
     } else if (!loggedInUserJSON) {
       localStorage.removeItem('user');
     }
-  }, [dispatch]);
+  };
 
   const handleLogin = async (userToLogin: ILoginCredentials): Promise<void> => {
-    const loginResponse = await dispatch(login(userToLogin));
-
-    if (loginResponse === 'user does not exist create an account') {
-      return navigate('/sign%20up');
-    } else if (loginResponse === 'invalid username or password') {
-      return navigate('login');
-    }
-    dispatch(fetchPatientList());
-    navigate('/home');
-    setIsLoggedIn(true);
+    await dispatch(login(userToLogin));
   };
 
-  const handleLogout = async () => {
-    navigate('/home');
-    setIsLoggedIn(false);
-    dispatch(removeUserFromState());
-    dispatch(removePatientsFromState());
-    dispatch(removeDiagnosesFromState());
-    localStorage.removeItem('loggedInUser');
-    localStorage.removeItem('patients');
-    localStorage.removeItem('diagnoses');
-  };
+  function handleLogout() {
+    dispatch(logout('home'));
+  }
 
   return (
     <Menu handleLogout={handleLogout} isLoggedIn={isLoggedIn}>
-      <div className="App">
+      <div>
         <Container>
           {/* <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
               Patientor
@@ -127,7 +157,7 @@ const App = () => {
             <Route path={'/weather'} element={<WeatherPage />} />
             <Route path={'/patients'} element={<PatientListPage />} />
             <Route path={'/patients/:id'} element={<PatientPage />} />
-            <Route path="/sign%20up" element={<SignUp />} />
+            <Route path="/signUp" element={<SignUp />} />
             <Route
               path="/login"
               element={

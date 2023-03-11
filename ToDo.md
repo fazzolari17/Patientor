@@ -1,3 +1,12 @@
-Remove .env file from git and add to .gitignore
-  make sure that data is put into local storage if it is undefinedand that you are routed to an error page etc.
-  fix the searchbox to also make letters/searchValue lowercase
+- design and add a router link to daily     
+  forecast and when clicked it will show the hourly forecast for the day every three hours 
+
+- fix weather so that when a user searches with the checkbox checked it replaces the data in the local storage with the fresh data so that the current weather in menu updates correctly
+
+- fix the ui design of the daily weather forecast page to look better
+
+- fix individual patients page to render the page even after refresh
+
+
+
+
