@@ -1,8 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-
-// Types
-import { FC } from 'react';
 
 // Material ui
 import ListItem from '@mui/material/ListItem';
@@ -19,8 +15,6 @@ interface Props {
   label: string;
 }
 const MenuItem = ({ label, handleClick, disabled }: Props) => {
-  const navigate = useNavigate();
-
   return (
     <ListItem disablePadding>
       <ListItemButton onClick={handleClick} disabled={disabled}>
