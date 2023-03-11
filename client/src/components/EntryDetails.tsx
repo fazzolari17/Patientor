@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card } from '@material-ui/core';
 import { Favorite, Work, MedicalServices } from '@mui/icons-material';
 import { Entry } from '../types';
@@ -13,16 +14,12 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
     switch (rating) {
       case 0:
         return 'green';
-        break;
       case 1:
         return 'yellow';
-        break;
       case 2:
         return 'orange';
-        break;
       case 3:
         return 'red';
-        break;
       default:
         return 'blue';
     }
@@ -39,7 +36,6 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
           <p>diagnosed by: {entry.specialist}</p>
         </Card>
       );
-      break;
     case 'OccupationalHealthcare':
       return (
         <Card variant="outlined">
@@ -50,7 +46,6 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
           <p>diagnosed by: {entry.specialist}</p>
         </Card>
       );
-      break;
     case 'HealthCheck':
       return (
         <Card variant="outlined">
@@ -64,7 +59,6 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
           <p>diagnosed by: {entry.specialist}</p>
         </Card>
       );
-      break;
     default:
       return assertNever(entry);
   }
