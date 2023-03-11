@@ -12,7 +12,8 @@ const MONGODB_URI =
 
 const setJwtExpirationTime = (rememberMe: boolean) => {
   const oneDay = 60 * 60 * 24;
-  const fourWeeks = '28d';
+  const oneWeek = 60 * 60 * 24 * 7;
+  const fourWeeks = oneWeek * 4;
   if (rememberMe) {
     return fourWeeks;
   } else {
