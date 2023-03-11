@@ -1,10 +1,10 @@
 export const capitalized: (arg0: string) => string = (string) => {
-  let newString: string[] = string.split(' ');
+  const newString: string[] = string.split(' ');
   const capitalizedWords = newString.map((word) => {
-    let newWord = word.split('');
-    let cap = newWord[0].toUpperCase();
-    let endOfWord = newWord.slice(1);
-    let caps = [...cap, ...endOfWord];
+    const newWord = word.split('');
+    const cap = newWord[0].toUpperCase();
+    const endOfWord = newWord.slice(1);
+    const caps = [...cap, ...endOfWord];
     return caps.join('');
   });
 
@@ -12,8 +12,7 @@ export const capitalized: (arg0: string) => string = (string) => {
 };
 
 export const uppercase: (arg0: string) => string = (string) => {
-  let newString = string.split('');
-  let uppercase = [];
+  const uppercase = [];
   let count = 0;
 
   while (count < string.length) {
