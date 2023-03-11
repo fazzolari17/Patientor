@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Constants
-import { apiBaseUrl } from '../constants';
+import { API_BASE_URI } from '../constants';
 
 interface Credentials {
   firstName: string;
@@ -11,7 +11,7 @@ interface Credentials {
 }
 
 const signUp = async (credentials: Credentials) => {
-  const response = await axios.post(`${apiBaseUrl}/signup`, credentials);
+  const response = await axios.post(`${API_BASE_URI}/signup`, credentials);
 
   return response.data;
 };
