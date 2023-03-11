@@ -1,4 +1,3 @@
-// import bcrypt from 'bcrypt';
 import express, { RequestHandler } from 'express';
 import User, { WeatherLocationData } from '../models/user';
 
