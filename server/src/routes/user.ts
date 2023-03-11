@@ -8,6 +8,14 @@ import { parseUserUpdateWeatherData } from '../utils/utils';
 
 const userRouter = express.Router();
 
+userRouter.get('/', (async (request: Request, response: Response) => {
+  const userId = request.query.userId;
+
+  const mongoResponse = await User.findById(userId);
+
+  response.status(200).send(mongoResponse);
+}) as RequestHandler);
+
 userRouter.post('/addWeather', (async (
   request: Request,
   response: Response,
