@@ -5,14 +5,24 @@
 @cityQuery=city={{city}}
 
 @latitude=35.3737111
-@latQuery=lat={{latitude}}
 @longitude=-83.2259803
-@lonQuery=lon={{longitude}}
+@days=40
 # get lat and lon from the weather api 
-POST http://localhost:{{PORT}}/api/weather/geoCode?{{cityQuery}}
+GET http://localhost:{{PORT}}/api/weather/geoCode?{{cityQuery}}
 Authorization: {{token}}
 
 ###
 # get weather data from api 
-POST http://localhost:{{PORT}}/api/weather/q?{{latQuery}}&{{lonQuery}}
+GET http://localhost:{{PORT}}/api/weather?lat={{latitude}}&lon={{longitude}}
 Authorization: {{token}}
+
+###
+# get  3 Hour FORECAST weather data from api 
+GET http://localhost:{{PORT}}/api/weather/forecast?lat={{latitude}}&lon={{longitude}}&days={{days}}
+Authorization: {{token}}
+
+###
+# get  Daily FORECAST weather data from api 
+GET http://localhost:{{PORT}}/api/weather/dailyforecast?lat={{latitude}}&lon={{longitude}}&days={{days}}
+Authorization: {{token}}
+
