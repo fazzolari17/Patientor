@@ -8,10 +8,11 @@ import { Diagnosis } from '../types';
 // Services
 import diagnosesService from '../services/diagnoses';
 
-interface InitialState {
+export interface InitialState {
   diagnoses: Diagnosis[] | [];
   patientDiagnosesCodes: Array<Diagnosis['code']> | [];
 }
+
 const initialState: InitialState = {
   diagnoses: [],
   patientDiagnosesCodes: [],
@@ -31,9 +32,7 @@ const diagnosesSlice = createSlice({
       };
       return (state = updatedState);
     },
-    removeDiagnoses(state, action) {
-      return (state = action.payload);
-    },
+    resetDiagnoses: () => initialState,
   },
 });
 
@@ -58,12 +57,6 @@ export const setPatientDiagnoses = (codes: Array<Diagnosis['code']>) => {
   };
 };
 
-export const removeDiagnosesFromState = () => {
-  return (dispatch: Dispatch) => {
-    dispatch(removeDiagnoses(initialState));
-  };
-};
-
-export const { setDiagnoses, setPatientDiagnosesCodes, removeDiagnoses } =
+export const { setDiagnoses, setPatientDiagnosesCodes, resetDiagnoses } =
   diagnosesSlice.actions;
 export default diagnosesSlice.reducer;

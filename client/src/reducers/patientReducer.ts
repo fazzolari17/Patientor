@@ -29,9 +29,7 @@ const patientSlice = createSlice({
     addEntryToPatient(state, action) {
       return [...state, { id: [action.payload.id], ...action.payload }];
     },
-    removePatients(state, action) {
-      return (state = action.payload);
-    },
+    resetPatients: () => initialState,
   },
 });
 
@@ -41,8 +39,8 @@ export const fetchPatientList = (token?: string) => {
       localStorage.removeItem('patients');
       const response = await patientService.fetchAllPatients(token);
       if (response) {
-        dispatch(setAllPatients(response));
         localStorage.setItem('patients', JSON.stringify(response));
+        dispatch(setAllPatients(response));
       }
     } catch (error) {
       console.error(error);
@@ -87,21 +85,11 @@ export const addNewDiagnosesToPatient = (id: string, values: NewEntry) => {
   };
 };
 
-export const removePatientsFromState = () => {
-  return async (dispatch: Dispatch) => {
-    try {
-      dispatch(removePatients(initialState));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-};
-
 export const {
   setAllPatients,
   addPatient,
   addEntryToPatient,
   updatePatient,
-  removePatients,
+  resetPatients,
 } = patientSlice.actions;
 export default patientSlice.reducer;
