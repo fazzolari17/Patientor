@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link, Typography } from '@material-ui/core';
 
-const Copyright = (props: any) => {
+const Copyright = (_props: unknown) => {
   return (
-    <Typography variant="body2" color="textSecondary" align="center" {...props}>
-      {'Copyright © '}
+    <Typography variant="body2" color="textSecondary" align="center">
+      {/* {'Copyright © '} */}
       <Link color="inherit" href="https://www.giuseppefazzolari.com/">
         Created by: Giuseppe Fazzolari
       </Link>{' '}
