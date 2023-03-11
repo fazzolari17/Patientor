@@ -58,6 +58,10 @@ const isNumber = (number: unknown): number is number => {
 };
 
 const parseNumber = (description: string, number: unknown): number => {
+  if (number === 0) {
+    return number as number;
+  }
+
   if (!number || !isNumber(number)) {
     throw new Error(`Incorrect or missing ${description}`);
   }
@@ -73,18 +77,6 @@ type Fields = {
   gender: unknown;
 };
 
-// type FieldsFromDB = {
-//   _id: unknown
-//   name: unknown;
-//   dateOfBirth: unknown;
-//   ssn: unknown;
-//   occupation: unknown;
-//   gender: unknown;
-// };
-
-// const fromDatabase = ({
-
-// })
 const toNewPatientEntry = ({
   name,
   dateOfBirth,
@@ -330,7 +322,7 @@ export interface WeatherData {
     gust?: number;
   };
   clouds: {
-    all: number;
+    all?: number;
   };
   dt: number;
   sys: {
@@ -457,4 +449,264 @@ export const parseUserUpdateWeatherData = ({
     country: parseString('missing or incorrect country', country),
     id: parseString('missing or incorrect id', id),
   };
+};
+
+export interface ForecastResponseFromApi {
+  cod: unknown;
+  message: unknown;
+  cnt: unknown;
+  list: IndividualForecastFromApi[];
+  city: {
+    id: unknown;
+    name: unknown;
+    coord: {
+      lat: unknown;
+      lon: unknown;
+    };
+    country: unknown;
+    population: unknown;
+    timezone: unknown;
+    sunrise: unknown;
+    sunset: unknown;
+  };
+}
+
+export interface ForecastWeatherData {
+  cod: string;
+  message: number;
+  cnt: number;
+  list: IndividualForecastData[];
+  city: {
+    id: number;
+    name: string;
+    coord: {
+      lat: number;
+      lon: number;
+    };
+    country: string;
+    population: number;
+    timezone: number;
+    sunrise: number;
+    sunset: number;
+  };
+}
+
+interface IndividualForecastFromApi {
+  dt: unknown;
+  main: {
+    temp: unknown;
+    feels_like: unknown;
+    temp_min: unknown;
+    temp_max: unknown;
+    pressure: unknown;
+    sea_level: unknown;
+    grnd_level: unknown;
+    humidity: unknown;
+    temp_kf: unknown;
+  };
+  weather: [
+    {
+      id: unknown;
+      main: unknown;
+      description: unknown;
+      icon: unknown;
+    },
+  ];
+  clouds: {
+    all: unknown;
+  };
+  wind: {
+    speed: unknown;
+    deg: unknown;
+    gust: unknown;
+  };
+  visibility: unknown;
+  pop: unknown;
+  sys: {
+    pod: unknown;
+  };
+  dt_txt: unknown;
+}
+
+export interface IndividualForecastData {
+  dt: number;
+  main: {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    pressure: number;
+    sea_level: number;
+    grnd_level: number;
+    humidity: number;
+    temp_kf: number;
+  };
+  weather: [
+    {
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    },
+  ];
+  clouds: {
+    all: number;
+  };
+  wind: {
+    speed: number;
+    deg: number;
+    gust: number;
+  };
+  visibility: number;
+  pop: number;
+  sys: {
+    pod: string;
+  };
+  dt_txt: string;
+}
+
+const parseIndividualForecastDay = (
+  props: IndividualForecastFromApi,
+): IndividualForecastData => {
+  return {
+    dt: parseNumber('missing or incorrect dt', props.dt),
+    main: {
+      temp: parseNumber('missing or incorrect temp', props.main.temp),
+      feels_like: parseNumber(
+        'missing or incorrect feels_like',
+        props.main.feels_like,
+      ),
+      temp_min: parseNumber(
+        'missing or incorrect temp_min',
+        props.main.temp_min,
+      ),
+      temp_max: parseNumber(
+        'missing or incorrect temp_max',
+        props.main.temp_max,
+      ),
+      pressure: parseNumber(
+        'missing or incorrect pressure',
+        props.main.pressure,
+      ),
+      sea_level: parseNumber(
+        'missing or incorrect sea_level',
+        props.main.sea_level,
+      ),
+      grnd_level: parseNumber(
+        'missing or incorrect grnd_level',
+        props.main.grnd_level,
+      ),
+      humidity: parseNumber(
+        'missing or incorrect humidity',
+        props.main.humidity,
+      ),
+      temp_kf: parseNumber('missing or incorrect temp_kf', props.main.temp_kf),
+    },
+    weather: [
+      {
+        id: parseNumber('missing or incorrect weather.id', props.weather[0].id),
+        main: parseString(
+          'missing or incorrect weather.main',
+          props.weather[0].main,
+        ),
+        description: parseString(
+          'missing or incorrect weather.description',
+          props.weather[0].description,
+        ),
+        icon: parseString(
+          'missing or incorrect weather.icon',
+          props.weather[0].icon,
+        ),
+      },
+    ],
+    clouds: {
+      all: parseNumber('missing or incorrect clouds.all', props.clouds.all),
+    },
+    wind: {
+      speed: parseNumber('missing or incorrect wind.speed', props.wind.speed),
+      deg: parseNumber('missing or incorrect wind.deg', props.wind.deg),
+      gust: parseNumber('missing or incorrect wind.gust', props.wind.gust),
+    },
+    visibility: parseNumber(
+      'missing or incorrect visibility',
+      props.visibility,
+    ),
+    pop: parseNumber('missing or incorrect pop', props.pop),
+    sys: {
+      pod: parseString('missing or incorrect sys.pod', props.sys.pod),
+    },
+    dt_txt: parseString('missing or incorrect dt_txt', props.dt_txt),
+  };
+};
+
+export const parseForecast = (
+  props: ForecastResponseFromApi,
+): ForecastWeatherData => {
+  return {
+    cod: parseString('missing or incorrect cod', props.cod),
+    message: parseNumber('missing or incorrect message', props.message),
+    cnt: parseNumber('missing or incorrect cnt', props.cnt),
+    list: props.list.map(
+      (listItem: IndividualForecastFromApi): IndividualForecastData =>
+        parseIndividualForecastDay(listItem),
+    ),
+    city: {
+      id: parseNumber('missing or incorrect city.id', props.city.id),
+      name: parseString('missing or incorrect city.name', props.city.name),
+      coord: {
+        lat: parseNumber('missing or incorrect lat', props.city.coord.lat),
+        lon: parseNumber('missing or incorrect lon', props.city.coord.lon),
+      },
+      country: parseString('missing or incorrect country', props.city.country),
+      population: parseNumber(
+        'missing or incorrect population',
+        props.city.population,
+      ),
+      timezone: parseNumber(
+        'missing or incorrect timezone',
+        props.city.timezone,
+      ),
+      sunrise: parseNumber('missing or incorrect sunrise', props.city.sunrise),
+      sunset: parseNumber('missing or incorrect sunset', props.city.sunset),
+    },
+  };
+};
+
+export function mostFrequentElemenInArray<Type>(arr: Type[]) {
+  const n = arr.length;
+  let maxcount = 0;
+  let element_having_max_freq;
+
+  for (let i = 0; i < n; i++) {
+    let count = 0;
+    for (let j = 0; j < n; j++) {
+      if (arr[i] == arr[j]) count++;
+    }
+
+    if (count > maxcount) {
+      maxcount = count;
+      element_having_max_freq = arr[i];
+    }
+  }
+
+  return element_having_max_freq;
+}
+
+export const findMostFrequent = (
+  arr: IndividualForecastData['weather'][],
+): IndividualForecastData['weather'][0] => {
+  const tempArr: number[] = [];
+  const flattenedArr = arr.flat();
+
+  for (let i = 0; i < flattenedArr.length; i++) {
+    tempArr.push(
+      parseNumber('missing or incorrect number', flattenedArr[i].id),
+    );
+  }
+
+  const id = mostFrequentElemenInArray(tempArr);
+  const returnWeather = flattenedArr.find((item) => item.id === id);
+  if (!returnWeather) throw new Error('missing weather object');
+
+  return returnWeather;
 };
