@@ -97,7 +97,7 @@ export const NumberField = ({ field, label, min, max }: NumberProps) => {
         {...field}
         value={value}
         onChange={(e) => {
-          const value = parseInt(e.target.value);
+          const value = parseInt(e.target.value, 10);
           if (value === undefined) return;
           if (value > max) setValue(max);
           else if (value <= min) setValue(min);
