@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Constants
-import { apiBaseUrl } from '../constants';
+import { API_BASE_URI } from '../constants';
 
 // Types
 import { Entry, NewEntry, Patient } from '../types';
@@ -11,11 +11,11 @@ const fetchAllPatients = async (token?: string) => {
   let response;
   try {
     if (token) {
-      response = await axios.get<Patient[]>(`${apiBaseUrl}/patients`, {
+      response = await axios.get<Patient[]>(`${API_BASE_URI}/patients`, {
         headers: { Authorization: `bearer ${token}` },
       });
     } else {
-      response = await axios.get<Patient[]>(`${apiBaseUrl}/patients`);
+      response = await axios.get<Patient[]>(`${API_BASE_URI}/patients`);
     }
     return response.data;
   } catch (error) {
@@ -26,7 +26,7 @@ const fetchAllPatients = async (token?: string) => {
 const fetchIndividualPatientData = async (patientId: string) => {
   try {
     const { data: patient } = await axios.get<Patient>(
-      `${apiBaseUrl}/patients/${patientId}`
+      `${API_BASE_URI}/patients/${patientId}`
     );
     return patient;
   } catch (error) {
@@ -37,7 +37,7 @@ const fetchIndividualPatientData = async (patientId: string) => {
 const addNewPatient = async (values: PatientFormValues) => {
   try {
     const { data: newPatient } = await axios.post<Patient>(
-      `${apiBaseUrl}/patients`,
+      `${API_BASE_URI}/patients`,
       values
     );
     return newPatient;
@@ -49,7 +49,7 @@ const addNewPatient = async (values: PatientFormValues) => {
 const addDiagnosesToPatient = async (paramId: string, newEntry: NewEntry) => {
   try {
     const { data }: { data: Entry } = await axios.put(
-      `${apiBaseUrl}/patients/${paramId}/entries`,
+      `${API_BASE_URI}/patients/${paramId}/entries`,
       newEntry
     );
     return data;
