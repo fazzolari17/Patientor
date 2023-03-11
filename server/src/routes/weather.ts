@@ -1,18 +1,60 @@
 import express, { Request, RequestHandler, Response } from 'express';
 import weatherService from '../services/weatherService';
 
+import { reduceForecastToDailyForecast } from '../utils/weather';
+
 const weatherRouter = express.Router();
 
-weatherRouter.post('/q', (async (req: Request, res: Response) => {
+weatherRouter.get('/dailyforecast', (async (req: Request, res: Response) => {
+  try {
+    const latSearchQuery = req.query.lat;
+    const lonSearchQuery = req.query.lon;
+    const forecastLength = req.query.days;
+
+    const forecast = await weatherService.fetchForecastWeatherDataFromApi(
+      latSearchQuery,
+      lonSearchQuery,
+      forecastLength,
+    );
+    if (!forecast) throw new Error('missing or undefined forecast');
+
+    const dailyForecast = reduceForecastToDailyForecast(forecast);
+
+    res.status(200).send(dailyForecast);
+  } catch (error) {
+    console.error(error);
+  }
+}) as RequestHandler);
+
+weatherRouter.get('/forecast', (async (req: Request, res: Response) => {
+  try {
+    const latSearchQuery = req.query.lat;
+    const lonSearchQuery = req.query.lon;
+    const forecastLength = req.query.days;
+
+    const forecast = await weatherService.fetchForecastWeatherDataFromApi(
+      latSearchQuery,
+      lonSearchQuery,
+      forecastLength,
+    );
+
+    res.status(200).send(forecast);
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(error);
+  }
+}) as RequestHandler);
+
+weatherRouter.get('/', (async (req: Request, res: Response) => {
   try {
     const latSearchQuery = req.query.lat;
     const lonSearchQuery = req.query.lon;
 
-    const response = await weatherService.fetchWeatherDataFromApi(
+    const response = await weatherService.fetchCurrentWeatherDataFromApi(
       latSearchQuery,
       lonSearchQuery,
     );
-    console.log(response);
+
     res.status(200).send(response);
   } catch (error) {
     console.error(error);
@@ -20,7 +62,7 @@ weatherRouter.post('/q', (async (req: Request, res: Response) => {
   }
 }) as RequestHandler);
 
-weatherRouter.post('/geocode', (async (req: Request, res: Response) => {
+weatherRouter.get('/geocode', (async (req: Request, res: Response) => {
   try {
     const citySearchQuery = req.query.city;
     if (!citySearchQuery) {
