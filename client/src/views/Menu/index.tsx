@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+// Material ui
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -16,9 +18,20 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 // Components
 import MenuItem from '../../components/MenuItem';
 
+// Router
 import { useNavigate } from 'react-router-dom';
+
+// Utils
 import { uppercase } from '../../utils/helperFunctions';
+
+// Component / Views
 import Copyright from '../../components/Copyright';
+
+// Redux
+import { useSelector } from 'react-redux';
+
+// Types
+import { RootState } from '../../store';
 
 const drawerWidth = 240;
 
@@ -80,6 +93,10 @@ interface IDrawerProps {
 const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const { weather } = useSelector((state: RootState) => state);
+  // Degree fahrenheight or celcius
+  const tempatureScale = 'F';
+
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -123,18 +140,58 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          {/* wire up funcitonality when the menu button is working correctly, should add a name and user menu */}
-          {renderTopMenuLoginOrLogoutButton}
+          <div>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </div>
+          {/* Right Side of top App Bar */}
+          <div style={{ marginLeft: 'auto' }}>
+            {/* wire up funcitonality when the menu button is working correctly, should add a name and user menu */}
+            {isLoggedIn ? (
+              <IconButton
+                color="default"
+                aria-label="weather"
+                onClick={() => navigate('/weather')}
+                sx={{ mr: 2, ...(open && { display: 'none' }) }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginRight: '1rem',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      style={{ width: '40px' }}
+                      src={`http://openweathermap.org/img/wn/${weather.weatherData?.weather[0].icon}@2x.png`}
+                      alt="weather icon"
+                    />
+                    {`${weather.weatherData?.main.temp.toFixed()}°${tempatureScale}`}
+                  </div>
+                  <div style={{ fontSize: '.75rem' }}>
+                    {weather.weatherData?.name}
+                  </div>
+                </div>
+              </IconButton>
+            ) : (
+              ''
+            )}
+            {renderTopMenuLoginOrLogoutButton}
+          </div>
 
           <Typography variant="h6" noWrap component="div" />
         </Toolbar>
@@ -166,11 +223,11 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
         <List>
           <MenuItem handleClick={() => navigate('home')} label={'home'} />
           {/* Enable weather when the funcitonality has been wired up */}
-          {/* <MenuItem
+          <MenuItem
             disabled={isLoggedIn ? false : true}
             handleClick={() => navigate('weather')}
             label={'weather'}
-          /> */}
+          />
           <MenuItem
             disabled={isLoggedIn ? false : true}
             handleClick={() => navigate('patients')}
@@ -180,10 +237,7 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
         <Divider />
         {/* Bottom Menu List */}
         <List>
-          <MenuItem
-            handleClick={() => navigate('sign%20up')}
-            label={'sign up'}
-          />
+          <MenuItem handleClick={() => navigate('signUp')} label={'sign up'} />
           {renderLoginOrLogoutMenuItem}
           {/* {
             isLoggedIn 
@@ -209,7 +263,7 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
         <DrawerHeader />
         {children}
         <div style={{ marginTop: 'auto' }}>
-          <Copyright sx={{ mt: 5, mb: 4 }} />
+          <Copyright />
         </div>
       </Main>
     </Box>
