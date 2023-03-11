@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { Theme, useTheme } from '@mui/material/styles';
+
+// Material ui
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import { MenuItem } from '@material-ui/core';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
+
+// Types
+import { SelectChangeEvent } from '@mui/material/Select';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
