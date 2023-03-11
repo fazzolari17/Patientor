@@ -19,14 +19,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use(middleware.tokenExtractor);
-
 app.use(middleware.requestLogger);
 
-app.get('/api/ping', (_req, res) => {
-  console.log(`Someone Pinged Here`);
-  res.status(200).send('pong');
-});
-
+// Health checkfor hosting service
 app.get('/api/health', (_req, res) => {
   res.status(200).send('200 ok');
 });
@@ -39,11 +34,7 @@ app.use('/api/login', loginRouter);
 app.use('/api/user', middleware.userExtractor, userRouter);
 app.use('/api/diagnoses', middleware.userExtractor, diagnosesRouter);
 app.use('/api/patients', middleware.userExtractor, patientRouter);
-app.use(
-  '/api/weather',
-  // middleware.userExtractor,
-  weatherRouter,
-);
+app.use('/api/weather', middleware.userExtractor, weatherRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
