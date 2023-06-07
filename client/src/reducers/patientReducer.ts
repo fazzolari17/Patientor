@@ -1,8 +1,8 @@
 // Redux
-import { createSlice, Dispatch, current } from '@reduxjs/toolkit';
+import { createSlice, Dispatch } from '@reduxjs/toolkit';
 
 // Types
-import { NewEntry, Patient } from '../types';
+import { NewEntry, Patient } from '../types/types';
 
 // Services
 import patientService from '../services/patients';
@@ -29,20 +29,18 @@ const patientSlice = createSlice({
     addEntryToPatient(state, action) {
       return [...state, { id: [action.payload.id], ...action.payload }];
     },
-    removePatientsFromState(state, action) {
-      return (state = action.payload);
-    },
+    resetPatients: () => initialState,
   },
 });
 
-export const useFetchPatientList = (token?: string) => {
+export const fetchPatientList = (token?: string) => {
   return async (dispatch: Dispatch) => {
     try {
       localStorage.removeItem('patients');
       const response = await patientService.fetchAllPatients(token);
       if (response) {
-        dispatch(setAllPatients(response));
         localStorage.setItem('patients', JSON.stringify(response));
+        dispatch(setAllPatients(response));
       }
     } catch (error) {
       console.error(error);
@@ -50,7 +48,7 @@ export const useFetchPatientList = (token?: string) => {
   };
 };
 
-export const useFetchIndividualPatientDataAndUpdateState = (id: string) => {
+export const fetchIndividualPatientDataAndUpdateState = (id: string) => {
   return async (dispatch: Dispatch) => {
     try {
       const patient = await patientService.fetchIndividualPatientData(id);
@@ -62,7 +60,7 @@ export const useFetchIndividualPatientDataAndUpdateState = (id: string) => {
   };
 };
 
-export const useAddNewPatient = (values: PatientFormValues) => {
+export const addNewPatient = (values: PatientFormValues) => {
   return async (dispatch: Dispatch) => {
     try {
       const patient = await patientService.addNewPatient(values);
@@ -73,7 +71,7 @@ export const useAddNewPatient = (values: PatientFormValues) => {
   };
 };
 
-export const useAddNewDiagnosesToPatient = (id: string, values: NewEntry) => {
+export const addNewDiagnosesToPatient = (id: string, values: NewEntry) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await patientService.addDiagnosesToPatient(id, values);
@@ -81,15 +79,9 @@ export const useAddNewDiagnosesToPatient = (id: string, values: NewEntry) => {
 
       const patients = await patientService.fetchAllPatients();
       dispatch(setAllPatients(patients));
-    } catch (error) {}
-  };
-};
-
-export const useRemovePatientsFromState = () => {
-  return async (dispatch: Dispatch) => {
-    try {
-      dispatch(removePatientsFromState(initialState));
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 };
 
@@ -98,6 +90,6 @@ export const {
   addPatient,
   addEntryToPatient,
   updatePatient,
-  removePatientsFromState,
+  resetPatients,
 } = patientSlice.actions;
 export default patientSlice.reducer;

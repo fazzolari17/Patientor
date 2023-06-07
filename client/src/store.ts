@@ -3,12 +3,16 @@ import { useDispatch } from 'react-redux';
 import user from './reducers/userReducer';
 import patients from './reducers/patientReducer';
 import diagnoses from './reducers/diagnosesReducer';
+import weather from './reducers/weatherReducer';
+import auth from './reducers/authReducer';
 
 const store = configureStore({
   reducer: {
     user,
     patients,
     diagnoses,
+    weather,
+    auth,
   },
 });
 

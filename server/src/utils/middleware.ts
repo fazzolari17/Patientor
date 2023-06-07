@@ -13,7 +13,7 @@ interface MiddleWare {
 const requestLogger = (
   request: Request,
   _response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const requests: MiddleWare = request as unknown as MiddleWare;
   logger.info('Method', requests.method);
@@ -28,7 +28,7 @@ const requestLogger = (
 const userExtractor = (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const requests = request as unknown as MiddleWare;
 
@@ -48,7 +48,7 @@ const userExtractor = (
 const tokenExtractor = (
   request: Request,
   _response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const requests: MiddleWare = request as unknown as MiddleWare;
   const authorization = request.get('authorization');
@@ -68,7 +68,7 @@ const errorHandler: ErrorRequestHandler = (
   error,
   _request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const errorMessage = parseString('error.message', error.message);
   logger.error(errorMessage);

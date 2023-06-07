@@ -1,9 +1,13 @@
 import * as React from 'react';
+
+// Material ui
 import { MenuItem } from '@material-ui/core';
 import InputLabel from '@mui/material/InputLabel';
-import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
+
+// Types
+import { SelectChangeEvent } from '@mui/material/Select';
 
 interface Props {
   setSearchFilterValue: React.Dispatch<React.SetStateAction<string>>;

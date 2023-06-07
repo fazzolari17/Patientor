@@ -1,6 +1,7 @@
 {
   "extends": [
     "eslint:recommended",
+    "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
@@ -27,5 +28,18 @@
   "parserOptions": {
     "project": "./tsconfig.json",
     "tsconfigRootDir": "/Users/giuseppefazzolari/repository/Patientor/server/"
-  }
+  },
+  "overrides": [
+        {
+            "files": [
+                "**/*.test.ts",
+                "**/*.test.tsx",
+                "**/*.spec.ts",
+                "**/*.spec.tsx"
+            ],
+            "env": {
+                "jest": true
+            }
+        }
+    ]
 }

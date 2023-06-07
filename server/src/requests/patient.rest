@@ -1,10 +1,18 @@
 @PORT= 3001
-@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2NzcwMDU3MzMsImV4cCI6MTY3NzA5MjEzM30.cmTLUGncTZp9VWNACc4RTgQeRi7mHNOc18V9DiwJ-DU
+@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2Nzc0MjE2NjEsImV4cCI6MTY3NzUwODA2MX0.Iu_8AaSLN-t-OgsWkBYZnPfDSvmQT7SGlLh1QIaZm1E
 
-@id=63f572c6ad24fe0337915dca
+# This needs to be the patient id and not the user's id!
+@id=63f59293ab81d6526c015236
 
+# Get all patients
 GET http://localhost:{{PORT}}/api/patients
 Authorization: {{token}}
+
+# Get individual patient information
+###
+GET http://localhost:{{PORT}}/api/patients/{{id}}
+Authorization: {{token}}
+
 
 ###
 POST http://localhost:{{PORT}}/api/patients

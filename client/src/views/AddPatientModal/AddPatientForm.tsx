@@ -8,7 +8,7 @@ import { Field, Formik, Form } from 'formik';
 import { TextField, SelectField, GenderOption } from './FormField';
 
 // Types
-import { Gender, Patient } from '../../types';
+import { Gender, Patient } from '../../types/types';
 
 /*
  * use type Patient, but omit id and entries,

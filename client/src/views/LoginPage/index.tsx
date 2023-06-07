@@ -8,7 +8,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -19,14 +18,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 // Utils
 import { parseString } from '../../utils/utils';
 
-// Services
-import loginService from '../../services/login';
-
 // Types
-import { ILoginCredentials } from '../../types';
-
-// Components / Views
-import Copyright from '../../components/Copyright';
+import { ILoginCredentials } from '../../types/types';
 
 interface SignInProps {
   handleLogin: (arg0: ILoginCredentials) => Promise<void>;
@@ -35,16 +28,26 @@ interface SignInProps {
 
 const theme = createTheme();
 
-export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
+export default function SignIn({ handleLogin }: SignInProps) {
   const [checkbox, setCheckbox] = React.useState<boolean>(false);
+
+  const stringParserMessage = (id: string) => {
+    return `misssing or incorrect string on loginPage ${id}`;
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     const userToLogin = {
-      email: parseString(data.get('email')).toLowerCase(),
-      password: parseString(data.get('password')),
+      email: parseString(
+        stringParserMessage('email'),
+        data.get('email')
+      ).toLowerCase(),
+      password: parseString(
+        stringParserMessage('password'),
+        data.get('password')
+      ),
       rememberMe: checkbox,
     };
 
@@ -83,7 +86,6 @@ export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
             />
             <TextField
               margin="normal"
@@ -98,7 +100,7 @@ export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
             <FormControlLabel
               control={
                 <Checkbox
-                  onClick={(e) => setCheckbox((prev) => !prev)}
+                  onClick={(_e) => setCheckbox((prev) => !prev)}
                   id="check"
                   value="remember"
                   color="primary"
@@ -121,7 +123,7 @@ export default function SignIn({ handleLogin, handleLogout }: SignInProps) {
                 </Link> */}
               </Grid>
               <Grid item>
-                <RouterLink to="/sign%20up">
+                <RouterLink to="/signUp">
                   {"Don't have an account? Sign Up"}
                 </RouterLink>
               </Grid>

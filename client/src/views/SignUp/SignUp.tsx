@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+// Router
 import { Link as RouterLink } from 'react-router-dom';
 
 // Material ui
@@ -8,13 +10,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Services
 import signupService from '../../services/signup';
@@ -22,31 +22,32 @@ import signupService from '../../services/signup';
 // Utils
 import { parseString } from '../../utils/utils';
 
-//  Components / views
-import Copyright from '../../components/Copyright';
-
-// const theme = createTheme();
+const stringParserMessage = (id: string) => {
+  return `misssing or incorrect string on signup page ${id}`;
+};
 
 export default function SignUp() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    interface NewUser {
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-    }
-
     const newUser = {
-      firstName: parseString(data.get('firstName')),
-      lastName: parseString(data.get('lastName')),
-      email: parseString(data.get('email')),
-      password: parseString(data.get('password')),
+      firstName: parseString(
+        stringParserMessage('firstname'),
+        data.get('firstName')
+      ),
+      lastName: parseString(
+        stringParserMessage('lastname'),
+        data.get('lastName')
+      ),
+      email: parseString(stringParserMessage('email'), data.get('email')),
+      password: parseString(
+        stringParserMessage('password'),
+        data.get('password')
+      ),
     };
 
-    const response = await signupService.signUp(newUser);
+    await signupService.signUp(newUser);
   };
 
   return (
@@ -76,7 +77,7 @@ export default function SignUp() {
                 fullWidth
                 id="firstName"
                 label="First Name"
-                autoFocus
+                // autoFocus
               />
             </Grid>
             <Grid item xs={12} sm={6}>

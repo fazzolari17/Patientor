@@ -9,11 +9,12 @@ import { parseString } from '../../utils/utils';
 const style = {
   flex: {
     display: 'flex',
-    flexDirection: 'column' as 'column',
+    flexDirection: 'column' as const,
     alignItems: 'center',
     justifyContent: 'center',
   },
 };
+
 interface IProps {
   isLoggedIn: boolean;
 }
@@ -23,11 +24,17 @@ const Home = ({ isLoggedIn }: IProps) => {
     user: { firstName = '', lastName = '' },
   } = useSelector((state: RootState) => state);
 
+  const stringParserMessage = (id: string) => {
+    return `misssing or incorrect string on homePage ${id}`;
+  };
+
   const renderWelcomeMessage =
     isLoggedIn && firstName !== null ? (
       <>
-        <h2>{`Welcome ${capitalized(parseString(firstName))} ${capitalized(
-          parseString(lastName)
+        <h2>{`Welcome ${capitalized(
+          parseString(stringParserMessage('firstname'), firstName)
+        )} ${capitalized(
+          parseString(stringParserMessage('lastname'), lastName)
         )} the the Patient Portal`}</h2>
         <h3>
           Click on the icon in the top left corner to open the menu and use the

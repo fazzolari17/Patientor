@@ -46,17 +46,34 @@ loginRouter.post('/', (async (request: Request, response: Response) => {
     };
 
     const secret = parseString('process.env.SECRET', process.env.SECRET);
- 
+
     const token = jwt.sign(userForToken, secret, {
       expiresIn: config.setJwtExpirationTime(body.rememberMe),
     });
 
+    const tokenExpirationTime: number =
+      Date.now() + config.setJwtExpirationTime(body.rememberMe);
+    console.log(tokenExpirationTime);
+
     return response.status(200).send({
-      token,
-      email: userToLogin.email,
-      firstName: userToLogin.firstName,
-      lastName: userToLogin.lastName,
-      id: userToLogin._id,
+      auth: {
+        token,
+        expiration: tokenExpirationTime,
+      },
+      user: {
+        email: userToLogin.email,
+        firstName: userToLogin.firstName,
+        lastName: userToLogin.lastName,
+        id: userToLogin._id,
+        weatherLocationData: {
+          name: userToLogin.weatherLocationData.name,
+          lat: userToLogin.weatherLocationData.lat,
+          lon: userToLogin.weatherLocationData.lon,
+          country: userToLogin.weatherLocationData.country,
+          state: userToLogin.weatherLocationData.state,
+          id: userToLogin.weatherLocationData.id,
+        },
+      },
     });
   } catch (error) {
     console.log('ERROR', { error });

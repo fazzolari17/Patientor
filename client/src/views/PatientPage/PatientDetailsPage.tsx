@@ -18,7 +18,7 @@ import EntryDetails from '../../components/EntryDetails';
 
 // Types
 import { RootState } from '../../store';
-import { Diagnosis, Entry, Patient } from '../../types';
+import { Diagnosis, Entry, Patient } from '../../types/types';
 
 interface IProps {
   id: string;
@@ -35,12 +35,16 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
   if (!patient) throw new Error('patient is not found');
 
   let codes: JSX.Element[] | [] = [];
-  let entries: Entry = patient.entries[0];
   let entry: JSX.Element[] | [] = [];
 
   React.useEffect(() => {
     setDiagnosesCodesArray(patient);
-  }, [patients]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patient, patients]);
+
+  const stringParserMessage = (id: string) => {
+    return `misssing or incorrect string on patientListPage ${id}`;
+  };
 
   const setDiagnosesCodesArray = (patient: Patient): void => {
     const { entries } = patient;
@@ -48,7 +52,10 @@ const PatientDetailsPage = ({ id, openModal }: IProps) => {
     entries.forEach((entry) => {
       if (entry.diagnosisCodes) {
         for (let i = 0; i < entry.diagnosisCodes.length; i++) {
-          const item = parseString(entry.diagnosisCodes[i]);
+          const item = parseString(
+            stringParserMessage(`${entry}`),
+            entry.diagnosisCodes[i]
+          );
           codes.push(item);
         }
       }

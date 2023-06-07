@@ -13,7 +13,7 @@ import { DiagnosisSelection } from '../AddPatientModal/FormField';
 import { useSelector } from 'react-redux';
 
 // Types
-import { Diagnosis } from '../../types';
+import { Diagnosis } from '../../types/types';
 import { RootState } from '../../store';
 
 // Utils

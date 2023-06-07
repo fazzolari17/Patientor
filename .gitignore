@@ -1,10 +1,18 @@
+# Directories
+client/build
 # Build directories
 server/build
+
 client/build
+
 buildfront
 
-# Dependency files
 node_modules 
+
+# Environment
+.env
+
+
 
 # Environment Files
 .env

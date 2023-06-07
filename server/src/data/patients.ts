@@ -126,7 +126,7 @@ const patients: PatientEntry[] = [
         specialist: 'MD House',
         diagnosisCodes: ['S62.5', 'Z57.1'],
         description:
-          "Broke finger typing linux kernal. Told patinet to stop typing for a while.",
+          'Broke finger typing linux kernal. Told patinet to stop typing for a while.',
         discharge: {
           date: '2014-01-16',
           criteria: 'Thumb has healed.',

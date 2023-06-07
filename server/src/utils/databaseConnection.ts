@@ -5,7 +5,6 @@ import config from './config';
 
 const start = Date.now();
 const MONGODB_URI = parseString('MONGODB_URI', config.MONGODB_URI);
-
 logger.info('Connecting to', MONGODB_URI);
 
 const connectToDatabase = async (): Promise<void> => {
@@ -15,7 +14,7 @@ const connectToDatabase = async (): Promise<void> => {
     logger.info(
       `It has taken ${
         (Date.now() - start) / 1000
-      } seconds to connect to Mongo_DB`
+      } seconds to connect to Mongo_DB`,
     );
   } catch (error) {
     if (typeof error === 'string') {

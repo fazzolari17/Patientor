@@ -12,7 +12,7 @@ import {
 import { Alert } from '@material-ui/lab';
 
 // Types
-import { EntryFormValues } from '../../types';
+import { EntryFormValues } from '../../types/types';
 
 // Form Components / Views
 import HospitalEntryForm from './HospitalEntryForm';
@@ -35,10 +35,8 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
         case 1:
         case 2:
           return { count: prevState.count - 1 };
-          break;
         case 0:
           return { count: 2 };
-          break;
         default:
           return prevState;
       }
@@ -51,10 +49,8 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
         case 0:
         case 1:
           return { count: prevState.count + 1 };
-          break;
         case 2:
           return { count: 0 };
-          break;
         default:
           return prevState;
       }
@@ -91,10 +87,8 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
           <Button
             color="primary"
             variant="contained"
-            // style={{  float: "right" }}
             type="button"
             onClick={increaseCount}
-            // onClick={onCancel}
           >
             {' '}
             {'>'}

@@ -3,13 +3,14 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 // Material ui
-import { Box, Table, Button, TableHead, Typography } from '@material-ui/core';
+import { Box, Table, TableHead, Typography } from '@material-ui/core';
+import Button from '@mui/material/Button';
 import { TableCell } from '@material-ui/core';
 import { TableRow } from '@material-ui/core';
 import { TableBody } from '@material-ui/core';
 
 // Types / Redux Store
-import { Patient } from '../../types';
+import { Patient } from '../../types/types';
 import { RootState } from '../../store';
 import { PatientFormValues } from '../AddPatientModal/AddPatientForm';
 
@@ -21,14 +22,7 @@ import HealthRatingBar from '../../components/HealthRatingBar';
 // Redux
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../store';
-import {
-  useAddNewPatient,
-  useFetchPatientList,
-} from '../../reducers/patientReducer';
-import {
-  useGetAllDiagnoses,
-  useSetPatientDiagnoses,
-} from '../../reducers/diagnosesReducer';
+import { addNewPatient } from '../../reducers/patientReducer';
 
 const PatientListPage = () => {
   const { patients } = useSelector((state: RootState) => state);
@@ -53,7 +47,7 @@ const PatientListPage = () => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      await dispatch(useAddNewPatient(values));
+      await dispatch(addNewPatient(values));
       closeModal();
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {

@@ -15,7 +15,7 @@ import { parseDate } from '../../utils/utils';
 import { useSelector } from 'react-redux';
 
 // Types
-import { Diagnosis } from '../../types';
+import { Diagnosis } from '../../types/types';
 import { RootState } from '../../store';
 
 export type EntryFormValues = {

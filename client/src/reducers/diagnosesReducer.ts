@@ -3,15 +3,16 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
 // Types
-import { Diagnosis } from '../types';
+import { Diagnosis } from '../types/types';
 
 // Services
 import diagnosesService from '../services/diagnoses';
 
-interface InitialState {
+export interface InitialState {
   diagnoses: Diagnosis[] | [];
   patientDiagnosesCodes: Array<Diagnosis['code']> | [];
 }
+
 const initialState: InitialState = {
   diagnoses: [],
   patientDiagnosesCodes: [],
@@ -22,26 +23,20 @@ const diagnosesSlice = createSlice({
   initialState,
   reducers: {
     setDiagnoses(state, action) {
-      const updatedState = {
-        ...state,
-        diagnoses: action.payload,
-      };
       return (state = action.payload);
     },
-    setPatientDiagnoses(state, action) {
+    setPatientDiagnosesCodes(state, action) {
       const updatedState = {
         ...state,
         patientDiagnosesCodes: [action.payload],
       };
       return (state = updatedState);
     },
-    removeDiagnosesFromState(state, action) {
-      return (state = action.payload);
-    },
+    resetDiagnoses: () => initialState,
   },
 });
 
-export const useGetAllDiagnoses = (token?: string) => {
+export const getAllDiagnoses = (token?: string) => {
   return async (dispatch: Dispatch) => {
     try {
       localStorage.removeItem('diagnoses');
@@ -50,22 +45,18 @@ export const useGetAllDiagnoses = (token?: string) => {
         localStorage.setItem('diagnoses', JSON.stringify(response));
         dispatch(setDiagnoses(response));
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 };
 
-export const useSetPatientDiagnoses = (codes: Array<Diagnosis['code']>) => {
+export const setPatientDiagnoses = (codes: Array<Diagnosis['code']>) => {
   return (dispatch: Dispatch) => {
-    dispatch(setPatientDiagnoses(codes));
+    dispatch(setPatientDiagnosesCodes(codes));
   };
 };
 
-export const useRemoveDiagnosesFromState = () => {
-  return (dispatch: Dispatch) => {
-    dispatch(removeDiagnosesFromState(initialState));
-  };
-};
-
-export const { setDiagnoses, setPatientDiagnoses, removeDiagnosesFromState } =
+export const { setDiagnoses, setPatientDiagnosesCodes, resetDiagnoses } =
   diagnosesSlice.actions;
 export default diagnosesSlice.reducer;

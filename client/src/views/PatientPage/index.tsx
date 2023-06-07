@@ -1,37 +1,38 @@
 import React from 'react';
 import axios from 'axios';
+
+// Router
 import { useParams } from 'react-router-dom';
 
 // Types
-import { NewEntry, Patient, Diagnosis } from '../../types';
+import { NewEntry, Patient } from '../../types/types';
 import { RootState } from '../../store';
-import { EntryFormValues } from '../../types';
+import { EntryFormValues } from '../../types/types';
 
 // Components / Views
 import PatientDetailsPage from './PatientDetailsPage';
 import AddEntryModal from '../AddEntryModal';
 
 // Utils
-import { assertNever, parseString } from '../../utils/utils';
+import { assertNever } from '../../utils/utils';
 
 // Redux / Reducers
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../store';
 import {
-  useAddNewDiagnosesToPatient,
-  useFetchIndividualPatientDataAndUpdateState,
+  addNewDiagnosesToPatient,
+  fetchIndividualPatientDataAndUpdateState,
 } from '../../reducers/patientReducer';
-import { setPatientDiagnoses } from '../../reducers/diagnosesReducer';
 
 const PatientPage = () => {
   const paramId = useParams().id;
   const dispatch = useAppDispatch();
-  const { user, patients, diagnoses } = useSelector(
-    (state: RootState) => state
-  );
+  const { patients } = useSelector((state: RootState) => state);
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
+
   let patient: Patient | undefined;
+  const patientRef = React.useRef(patient);
 
   const openModal = (): void => setModalOpen(true);
 
@@ -41,27 +42,13 @@ const PatientPage = () => {
   };
   if (!paramId) throw new Error('missing parameter id');
 
-  const setDiagnosesCodesArray = (patient: Patient): void => {
-    const { entries } = patient;
-    const codes: Array<Diagnosis['code']> = [];
-    entries.forEach((entry) => {
-      if (entry.diagnosisCodes) {
-        for (let i = 0; i < entry.diagnosisCodes.length; i++) {
-          const item = parseString(entry.diagnosisCodes[i]);
-          codes.push(item);
-        }
-      }
-    });
-    dispatch(setPatientDiagnoses(codes));
-  };
-
   React.useEffect(() => {
-    patient = patients.find((patient) => patient.id === paramId);
-    if (!patient) throw new Error('patient is not found');
-
-    dispatch(useFetchIndividualPatientDataAndUpdateState(paramId));
-    setDiagnosesCodesArray(patient);
-  }, []);
+    patientRef.current = patients.find((patient) => patient.id === paramId);
+    if (!patientRef.current) {
+      throw new Error('patient is not found');
+    }
+    dispatch(fetchIndividualPatientDataAndUpdateState(paramId));
+  }, [dispatch, paramId, patient, patients]);
 
   const submitNewEntry = async (values: EntryFormValues) => {
     let newEntry: NewEntry;
@@ -129,7 +116,7 @@ const PatientPage = () => {
     }
 
     try {
-      dispatch(useAddNewDiagnosesToPatient(paramId, newEntry));
+      dispatch(addNewDiagnosesToPatient(paramId, newEntry));
       closeModal();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
