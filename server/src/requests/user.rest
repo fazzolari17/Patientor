@@ -1,14 +1,35 @@
-@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2Nzc4MDQ5MTQsImV4cCI6MTY3Nzg5MTMxNH0.ZUeCrHpBPtbKGvl6Z98p2kQ29lOkVH_k9nkFpvZP400
+@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2ODYxODA1OTAsImV4cCI6MTY4NjI2Njk5MH0.XRKvp0rfln_pMkVAFQ9KsMKJruayG9bi4wLJqjei4pc
 @userId=63f0593b412273dc48613063
 @PORT=3001
+
+#####################################
+### Request to Development Server ###
+#####################################
+
+# Health Route 
+GET https://localhost:{{PORT}}/api/health
+
+
+###
+# Get all users Route 
+GET http://localhost:{{PORT}}/api/user/allUsers
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "email": "root@gmail.com",
+  "password": "password"
+}
+
 # Sign Up Route
+###
 POST http://localhost:{{PORT}}/api/signup
 Content-Type: application/json
 
 {
-  "firstName": "root",
+  "firstName": "test",
   "lastName": "user",
-  "email": "root@gmail.com",
+  "email": "test@gmail.com",
   "password": "password"
 }
 
@@ -35,4 +56,33 @@ Content-Type: application/json
     "country": "US",
     "state": "North Carolina",
     "id": "328d92cd-14e0-43cd-8c91-f6136662bac8"
-  }
+}
+
+
+####################################
+### Request to Production Server ###
+####################################
+
+# Server Health Route
+GET https://patientor-server-docker.onrender.com/api/health
+
+###
+
+POST https://patientor-server-docker.onrender.com/api/login
+Content-Type: application/json
+
+{
+  "email": "root@gmail.com",
+  "password": "password"
+}
+
+###
+POST https://patientor-server-docker.onrender.com/api/signup
+Content-Type: application/json
+
+{
+  "firstName": "test",
+  "lastName": "user",
+  "email": "test@gmail.com",
+  "password": "password"
+}
