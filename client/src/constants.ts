@@ -1,6 +1,6 @@
 const PORT = process.env.port || 3001;
 // const productionPORT = process.env.PORT || 10000;
-const production = `https://patientor-ccvj.onrender.com`;
+const production = `https://patientor-server-docker.onrender.com`;
 const local = `http://localhost:${PORT}`;
 
 const url = process.env.NODE_ENV === 'production' ? production : local;
