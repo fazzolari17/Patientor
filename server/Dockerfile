@@ -7,7 +7,8 @@ COPY . .
 RUN npm install && \
   npm rebuild bcrypt -build-from-source && \
   npm install axios --save && \
-  npm install --save @types/axios
+  npm install --save @types/axios && \
+  npm run build
 
 CMD ["npm", "start"]
 
