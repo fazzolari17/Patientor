@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 node:16.18.1
 
-WORKDIR usr/src/app
+WORKDIR ./
 
 COPY . .
 
