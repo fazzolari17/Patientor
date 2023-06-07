@@ -16,6 +16,8 @@ usage () {
   echo "down:dev        | shuts down the development container and removes all volumes and orphans"
   echo "up:dev          | builds the developmnent container"
   echo "restart:dev     | restarts the developmnent container without building"
+  echo "client:bash     | opens a bash session in the client"
+  echo "server:bash     | opens a bash session in the server" 
   # echo "api:test        | runs test suite for API"
   # echo "api:cop         | runs rubocop for API"
   # echo "build           | applies docker compose to start the API stack"
@@ -67,6 +69,18 @@ down () {
 
 down:dev () {
   docker compose -f docker-compose.dev.yml down --volumes --remove-orphans
+}
+
+client:bash () {
+  docker exec -it patientor-client-production bash
+}
+
+server:bash () {
+  docker exec -it patientor-server-production bash
+}
+
+restart () {
+  docker compose -f docker-compose.yml up
 }
 
 # rehome () {
@@ -228,7 +242,7 @@ down:dev () {
 # }
 
 case $COMMAND in
-  up|up:dev|restart:dev|down|down:dev)
+  up|up:dev|restart:dev|down|down:dev|client:bash|server:bash|restart)
   # reset|rehome|getSecrets|ui:fixtures|api:build|api:console|api:bash|api:bash-test|
   # api:log|api:reset|api:recycle|api:test|api:cop|build|db:shell|db:bash|db:import|
   # db:init|db:backfill|db:migrate|db:remove|ui:bash|ui:lint|ui:build|ui:reset|ui:test|
