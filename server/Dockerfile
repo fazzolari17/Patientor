@@ -2,7 +2,7 @@ FROM --platform=linux/amd64 node:16.18.1
 
 WORKDIR /usr/src/app
 
-COPY . ./usr/src/app
+COPY . .
 
 RUN npm install && \
   npm rebuild bcrypt -build-from-source && \
