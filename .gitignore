@@ -1,20 +1,11 @@
-# Directories
-client/build
 # Build directories
+client/build
 server/build
 
-client/build
-
-buildfront
-
+# Dependencies
 node_modules 
 
 # Environment
-.env
-
-
-
-# Environment Files
 .env
 
 # Apple files 
