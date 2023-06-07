@@ -1,4 +1,4 @@
-FROM node:16 as build-stage
+FROM --platform=linux/amd64 node:16 as build-stage
 
 WORKDIR usr/src/app
 
