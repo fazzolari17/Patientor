@@ -4,7 +4,7 @@ WORKDIR ./
 
 COPY . .
 
-RUN npm install -g && \
+RUN npm install && \
   npm rebuild bcrypt -build-from-source && \
   npm install axios --save && \
   npm install --save @types/axios
