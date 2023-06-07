@@ -15,6 +15,21 @@ userRouter.get('/', (async (request: Request, response: Response) => {
   response.status(200).send(mongoResponse);
 }) as RequestHandler);
 
+userRouter.get('/allUsers', (async (request: Request, response: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const body = request.body;
+
+  const mongoResponse = await User.find({});
+
+  if (body.email === 'root@gmail.com') {
+    response.status(200).send(mongoResponse);
+  }
+  response.status(401).json({
+    error:
+      'unauthorized user you do not have credentials to view this information',
+  });
+}) as RequestHandler);
+
 userRouter.post('/addWeather', (async (
   request: Request,
   response: Response,
