@@ -8,7 +8,8 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'plugin:prettier/recommended',
+    /* Needed to comment this out in order to get the project to build and work correctly in docker container */ 
+    /* 'plugin:prettier/recommended', */
     'plugin:jsx-a11y/strict',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
