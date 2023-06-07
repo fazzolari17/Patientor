@@ -1,9 +1,13 @@
+# Build directories
 server/build
-
 client/build
-
 buildfront
 
+# Dependency files
 node_modules 
-.DS_Store
+
+# Environment Files
+.env
+
+# Apple files 
 .DS_Store
