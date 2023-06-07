@@ -1,0 +1,236 @@
+#!/usr/bin/env bash
+
+# stop on errors
+set -e
+
+# to echo
+# set -x
+
+usage () {
+  echo "patientor <command>"
+  echo ""
+  echo "Commands:"
+  echo "---------"
+  echo "up              | builds the production docker container"
+  echo "down            | shuts down the container"
+  echo "down:dev        | shuts down the development container and removes all volumes and orphans"
+  echo "up:dev          | builds the developmnent container"
+  echo "restart:dev     | restarts the developmnent container without building"
+  echo "api:test        | runs test suite for API"
+  echo "api:cop         | runs rubocop for API"
+  echo "build           | applies docker compose to start the API stack"
+  echo "db:init         | sets up the development database; will delete the existing data if it exists"
+  echo "db:shell        | opens a mysql shell on the mariadb container"
+  echo "getSecrets      | generally one-time S3 download of any dev secrets files - requires AWS profile and access key"
+  echo "log             | tail the production log"
+  echo "reset           | deletes the docker images for the API and DB"
+  echo "server          | starts the development server"
+  echo "ui:bash         | opens a bash shell on the EmberJS client container"
+  echo "ui:test         | runs test suite for UI"
+  echo "ui:fixtures     | builds and lints the fixtures"
+  echo "ui:watch-css    | builds and watches css"
+}
+
+if [ -z $1 ]
+then
+  usage
+  exit 0
+fi
+
+COMMAND=$1
+
+shift
+
+REST_ARGS=$*
+
+PROJECT=patientor
+API="${PROJECT}-web-1"
+UI="${PROJECT}-ux-1"
+DB="${PROJECT}-db-1"
+ADMINER="${PROJECT}-adminer-1"
+
+up () {
+  docker compose up --build
+}
+
+up:dev () {
+  docker compose -f docker-compose.dev.yml up --build
+}
+
+restart:dev () {
+  docker compose -f docker-compose.dev.yml up
+}
+
+down () {
+  docker compose down
+}
+
+down:dev () {
+  docker compose -f docker-compose.dev.yml down --volumes --remove-orphans
+}
+
+rehome () {
+  sudo chown -R $USER .
+  sudo chgrp -R $USER .
+}
+
+reset () {
+  ui:reset
+  db:reset
+  api:reset
+}
+
+
+ui:fixtures () {
+  rm -rf api/tmp/fixtures
+  mkdir -p api/tmp/fixtures
+  docker exec -e RAILS_ENV=test $API rspec spec/requests/ember_fixtures_spec.rb
+  cp api/tmp/fixtures/*.js ui/tests/fixtures
+  ui:lint
+}
+
+# if this is not working, you need to get your AWS profile set up in 
+# ~/.aws/credentials. Contact artzt@juniperswordplay.com for access.
+#
+getSecrets () {
+  aws s3 cp --profile=tinysis-devtest s3://tinysis-devtest/.env .env
+  aws s3 cp --profile=tinysis-devtest s3://tinysis-devtest/api api --recursive
+}
+
+db:create () {
+  docker exec $API rake db:create
+}
+
+db:migrate () {
+  docker exec $API rake db:migrate
+}
+
+db:drop () {
+  docker exec -e DISABLE_DATABASE_ENVIRONMENT_CHECK=1 $API rake db:drop
+}
+
+db:seed () {
+  docker exec $API rake db:seed
+}
+
+db:test:load () {
+  docker exec $API rake db:test:load
+}
+
+db:remove () {
+  docker volume remove $PROJECT_tinysis_data
+}
+
+db:bash () {
+  docker exec -it $DB bash
+}
+
+db:shell () {
+  docker exec -it $DB mysql -h db -u root -proot tinysis
+}
+
+db:import () {
+  docker exec -it $DB /aws/local-import.sh $REST_ARGS
+}
+
+db:backfill () {
+  docker exec -it $DB /aws/local-backfill.sh
+}
+
+db:init () {
+  db:drop
+  db:create
+  db:migrate
+  db:seed
+  db:test:load
+}
+
+db:reset () {
+  docker rm $DB
+  docker rmi ${PROJECT}-db
+}
+
+api:bash () {
+  ARGS=${REST_ARGS:-bash}
+  docker exec -it $API $ARGS
+}
+
+api:bash-test () {
+  ARGS=${REST_ARGS:-bash}
+  docker exec -it -e RAILS_ENV=test $API $ARGS
+}
+
+api:log () {
+  docker exec -it $API tail -f "log/development.log"
+}
+
+api:recycle () {
+  docker stop $API
+  docker start $API
+}
+
+api:reset () {
+  docker stop $API
+  docker rm -f $API
+  docker rmi ${PROJECT}-web
+}
+
+api:test () {
+  docker exec -e RAILS_ENV=test $API bundle exec rspec $REST_ARGS
+}
+
+api:cop () {
+  docker exec -e RAILS_ENV=test $API rubocop -a
+}
+
+api:build () {
+  docker build api --tag name:TINYSIS_PROD --tag sha:$(git rev-parse HEAD)
+}
+
+api:console () {
+  docker exec -it $API rails c
+}
+
+ui:reset () {
+  CONTAINER=$(docker ps -a -q --filter name="tiny-ale-ux_1")
+
+  if [ ! -z "$CONTAINER" ]; then
+    docker stop ${CONTAINER}
+    docker rm ${CONTAINER}
+  fi
+
+  IMAGE=$(docker images -q tiny-ale-ux)
+
+  if [ ! -z "$IMAGE" ]; then
+    docker rmi -f ${IMAGE}
+  fi
+}
+
+ui:bash () {
+  ARGS=${REST_ARGS:-bash}
+  docker exec -it $UI $ARGS
+}
+
+ui:test () {
+  docker exec $UI ember test
+}
+
+ui:build () {
+  docker exec $UI ember build --environment=production
+}
+
+ui:lint () {
+  docker exec $UI yarn run lint:fix
+}
+
+ui:watch-css () {
+  docker exec -it $UI yarn run tailwind:watch
+}
+
+case $COMMAND in
+  up|up:dev|restart:dev|down|down:dev|reset|rehome|getSecrets|ui:fixtures|api:build|api:console|api:bash|api:bash-test|api:log|api:reset|api:recycle|api:test|api:cop|build|db:shell|db:bash|db:import|db:init|db:backfill|db:migrate|db:remove|ui:bash|ui:lint|ui:build|ui:reset|ui:test|ui:watch-css)
+      $COMMAND;;
+  *)
+      usage
+      exit 1;;
+esac
