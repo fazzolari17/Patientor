@@ -8,6 +8,7 @@ const { dispatch } = store; // direct access to redux store.
 const interceptor = axios.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (!error.response) return error;
     const { status, data } = error.response;
 
     if (status === UNAUTHORIZED) {

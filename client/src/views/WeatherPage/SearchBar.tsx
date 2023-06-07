@@ -15,26 +15,27 @@ import { useAppDispatch } from '../../store';
 import { useSelector } from 'react-redux';
 import {
   fetchCurrentWeatherData,
+  fetchDailyForecast,
+  fetchForecastRegardlessOfTimestamp,
   setWeatherLocationData,
 } from '../../reducers/weatherReducer';
+import { updateUserWeatherLocationData } from '../../reducers/userReducer';
 
-// Helper Functions
+// Helper Functions / Utils
 import debounce from 'lodash.debounce';
 import { v4 as uuid } from 'uuid';
-
-// Types
-import { ApiGeocodeResults } from '../../types';
-import { updateUserWeatherLocationData } from '../../reducers/userReducer';
-import { RootState } from '../../store';
 import { parseString } from '../../utils/utils';
 
-export default function ComboBox() {
+// Types
+import { ApiGeocodeResults } from '../../types/weather';
+import { RootState } from '../../store';
+
+const SearchBar = () => {
   const [isChecked, setIsChecked] = React.useState<boolean>(true);
   const [searchValue, setSearchValue] = React.useState<string>('');
   const [apiGeocodeResults, setApiGeocodeResults] = React.useState<
     ApiGeocodeResults[] | []
   >([]);
-
   const dispatch = useAppDispatch();
   const { user } = useSelector((state: RootState) => state);
 
@@ -72,6 +73,21 @@ export default function ComboBox() {
             )
           );
         }
+
+        const valueToDispatch = apiGeocodeResults.find((item) => {
+          const separatedArray = value.split(', ');
+          return (
+            item.name === separatedArray[0] && item.state === separatedArray[1]
+          );
+        });
+        if (!valueToDispatch) throw new Error('missing data to dispatch');
+
+        dispatch(
+          fetchForecastRegardlessOfTimestamp(
+            valueToDispatch.lat,
+            weatherLocationData.lon
+          )
+        );
       }
     }, 300);
 
@@ -81,6 +97,12 @@ export default function ComboBox() {
   const handleChange = (event: React.SyntheticEvent<Element, Event>): void => {
     const { target } = event;
     setSearchValue((target as HTMLInputElement).value);
+    dispatch(
+      fetchDailyForecast(
+        user.weatherLocationData.lat,
+        user.weatherLocationData.lon
+      )
+    );
   };
 
   React.useEffect(() => {
@@ -151,4 +173,6 @@ export default function ComboBox() {
       />
     </div>
   );
-}
+};
+
+export default SearchBar;

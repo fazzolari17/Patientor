@@ -3,28 +3,26 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
 // Types
-import { ILoginCredentials, ILoggedInUser, ApiGeocodeResults } from '../types';
+import { ILoginCredentials, ILoggedInUser } from '../types/types';
+import { ApiGeocodeResults } from '../types/weather';
 
 // reducers
-import { resetDiagnoses, setDiagnoses } from './diagnosesReducer';
-import { resetPatients, setAllPatients } from './patientReducer';
+import { getAllDiagnoses, resetDiagnoses } from './diagnosesReducer';
+import { fetchPatientList, resetPatients } from './patientReducer';
+import { resetAuth, setIsLoggedIn, setToken } from './authReducer';
+import {
+  resetWeather,
+  fetchCurrentWeatherData,
+  fetchForecastBasedOnTimestamp,
+} from './weatherReducer';
 
 // Services
 import loginService from '../services/login';
-import patientService from '../services/patients';
-import diagnosesService from '../services/diagnoses';
 import userService from '../services/user';
-import weatherService from '../services/weather';
-import {
-  addHourlyForecastData,
-  addDailyForecastData,
-  addWeatherData,
-  resetWeather,
-} from './weatherReducer';
-import { resetAuth, setIsLoggedIn, setToken } from './authReducer';
 
 // Router
 import history from '../router/history';
+import axios from 'axios';
 
 const initialState: ILoggedInUser = {
   firstName: null,
@@ -65,6 +63,10 @@ export const logout = (navigateTo: string) => {
     localStorage.removeItem('weather');
     localStorage.removeItem('hourlyForecast');
     localStorage.removeItem('dailyForecast');
+
+    // Navigate After login passed as a argument to navigate to different places
+    // depending on the reason for logging out Example: Logged out due to expired
+    // JSON Web Token vs User initiated logout.
     history.replace(`/${navigateTo}`);
   };
 };
@@ -72,68 +74,41 @@ export const logout = (navigateTo: string) => {
 export const login = (credentials: ILoginCredentials) => {
   return async (dispatch: Dispatch) => {
     const response = await loginService.login(credentials);
+    const token = response.auth.token;
+    const lat = response.user.weatherLocationData.lat;
+    const lon = response.user.weatherLocationData.lon;
 
     if (response === undefined) {
       // Prune Tree if response is undefined
       return;
-    } else if (response.auth.token) {
+    } else if (token) {
       // Set token in auth slice and set user in user slice
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+      // Set User into state if token is returned
       dispatch(setUser(response.user));
       localStorage.setItem('loggedInUser', JSON.stringify(response.user));
 
       dispatch(setToken(response.auth));
-      dispatch(setIsLoggedIn(true));
       localStorage.setItem('authorization', JSON.stringify(response.auth));
 
-      const patients = await patientService.fetchAllPatients(
-        response.auth.token
-      );
-      if (patients === undefined) {
-        return new Error('Patients not found in userReducer: Line: 52');
-      }
-      dispatch(setAllPatients(patients));
-      localStorage.setItem('patients', JSON.stringify(patients));
+      dispatch(setIsLoggedIn(true));
 
-      const diagnoses = await diagnosesService.fetchDiagnosesFromApi(
-        response.auth.token
-      );
-      if (diagnoses === undefined) {
-        return new Error('Diagnoses not found in userReducer: Line: 58');
-      }
-      dispatch(setDiagnoses(diagnoses));
-      localStorage.setItem('diagnoses', JSON.stringify(diagnoses));
-    }
+      const patientsDispatch = fetchPatientList(token);
+      patientsDispatch(dispatch);
 
-    const weather = await weatherService.fetchCurrentWeatherDataFromApi(
-      response.user.weatherLocationData.lat,
-      response.user.weatherLocationData.lon
-    );
-    if (weather === undefined) {
-      return new Error('weather not found in userReducer: Line: 79');
-    }
-    dispatch(addWeatherData(weather));
-    localStorage.setItem('weather', JSON.stringify(weather));
+      const diagnosesDispatch = getAllDiagnoses(token);
+      diagnosesDispatch(dispatch);
 
-    const hourlyForecast = await weatherService.fetchHourlyForecastWeatherData(
-      response.user.weatherLocationData.lat,
-      response.user.weatherLocationData.lon
-    );
-    if (hourlyForecast === undefined) {
-      return new Error('forecast not found in userReducer: Line: 89');
-    }
-    dispatch(addHourlyForecastData(hourlyForecast));
-    localStorage.setItem('hourlyForecast', JSON.stringify(hourlyForecast));
+      const currentWeatherDispatch = fetchCurrentWeatherData(lat, lon);
+      currentWeatherDispatch(dispatch);
 
-    const dailyForecast = await weatherService.fetchDailyForecastWeatherData(
-      response.user.weatherLocationData.lat,
-      response.user.weatherLocationData.lon
-    );
-    if (dailyForecast === undefined) {
-      return new Error('forecast not found in userReducer: Line: 89');
+      const forecastWeatherDispatch = fetchForecastBasedOnTimestamp(lat, lon);
+      forecastWeatherDispatch(dispatch);
+
+      // Navigate after logging in
+      history.replace('/home');
     }
-    dispatch(addDailyForecastData(dailyForecast));
-    localStorage.setItem('dailyForecast', JSON.stringify(dailyForecast));
-    history.replace('/home');
   };
 };
 

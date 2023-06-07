@@ -1,4 +1,13 @@
-import { Diagnosis, Entry, Gender, Patient, LocationData } from '../types';
+import { Diagnosis, Entry, Gender, Patient } from '../types/types';
+import {
+  LocationData,
+  IndividualHourlyForecast,
+  HourlyWeatherForecast,
+} from '../types/weather';
+import {
+  IndividualForecastFromApi,
+  ForecastResponseFromApi,
+} from '../types/apiResponses';
 
 export const assertNever = (value: never): never => {
   throw new Error(
@@ -209,125 +218,9 @@ export const timeSinceLastWeatherUpdate = () => {
   return elapsedTime;
 };
 
-export interface ForecastResponseFromApi {
-  timestamp: unknown;
-  cod: unknown;
-  message: unknown;
-  cnt: unknown;
-  list: IndividualForecastFromApi[];
-  city: {
-    id: unknown;
-    name: unknown;
-    coord: {
-      lat: unknown;
-      lon: unknown;
-    };
-    country: unknown;
-    population: unknown;
-    timezone: unknown;
-    sunrise: unknown;
-    sunset: unknown;
-  };
-}
-
-export interface ForecastWeatherData {
-  timestamp: number;
-  cod: string;
-  message: number;
-  cnt: number;
-  list: IndividualForecastData[];
-  city: {
-    id: number;
-    name: string;
-    coord: {
-      lat: number;
-      lon: number;
-    };
-    country: string;
-    population: number;
-    timezone: number;
-    sunrise: number;
-    sunset: number;
-  };
-}
-
-interface IndividualForecastFromApi {
-  dt: unknown;
-  main: {
-    temp: unknown;
-    feels_like: unknown;
-    temp_min: unknown;
-    temp_max: unknown;
-    pressure: unknown;
-    sea_level: unknown;
-    grnd_level: unknown;
-    humidity: unknown;
-    temp_kf: unknown;
-  };
-  weather: [
-    {
-      id: unknown;
-      main: unknown;
-      description: unknown;
-      icon: unknown;
-    }
-  ];
-  clouds: {
-    all: unknown;
-  };
-  wind: {
-    speed: unknown;
-    deg: unknown;
-    gust: unknown;
-  };
-  visibility: unknown;
-  pop: unknown;
-  sys: {
-    pod: unknown;
-  };
-  dt_txt: unknown;
-}
-
-export interface IndividualForecastData {
-  dt: number;
-  main: {
-    temp: number;
-    feels_like: number;
-    temp_min: number;
-    temp_max: number;
-    pressure: number;
-    sea_level: number;
-    grnd_level: number;
-    humidity: number;
-    temp_kf: number;
-  };
-  weather: [
-    {
-      id: number;
-      main: string;
-      description: string;
-      icon: string;
-    }
-  ];
-  clouds: {
-    all: number;
-  };
-  wind: {
-    speed: number;
-    deg: number;
-    gust: number;
-  };
-  visibility: number;
-  pop: number;
-  sys: {
-    pod: string;
-  };
-  dt_txt: string;
-}
-
 const parseIndividualForecastDay = (
   props: IndividualForecastFromApi
-): IndividualForecastData => {
+): IndividualHourlyForecast => {
   return {
     dt: parseNumber('missing or incorrect dt', props.dt),
     main: {
@@ -401,14 +294,14 @@ const parseIndividualForecastDay = (
 
 export const parseForecast = (
   props: ForecastResponseFromApi
-): ForecastWeatherData => {
+): HourlyWeatherForecast => {
   return {
     timestamp: parseNumber('missing or in correct timestamp', props.timestamp),
     cod: parseString('missing or incorrect cod', props.cod),
     message: parseNumber('missing or incorrect message', props.message),
     cnt: parseNumber('missing or incorrect cnt', props.cnt),
     list: props.list.map(
-      (listItem: IndividualForecastFromApi): IndividualForecastData =>
+      (listItem: IndividualForecastFromApi): IndividualHourlyForecast =>
         parseIndividualForecastDay(listItem)
     ),
     city: {
@@ -431,4 +324,24 @@ export const parseForecast = (
       sunset: parseNumber('missing or incorrect sunset', props.city.sunset),
     },
   };
+};
+
+export const windDirection = (degrees: number) => {
+  if (degrees > 337.5 || degrees < 22.5) {
+    return 'N';
+  } else if (degrees > 22.5 && degrees < 67.5) {
+    return 'NE';
+  } else if (degrees > 67.5 && degrees < 112.5) {
+    return 'E';
+  } else if (degrees > 112.5 && degrees < 157.5) {
+    return 'SE';
+  } else if (degrees > 157.5 && degrees < 202.5) {
+    return 'S';
+  } else if (degrees > 202.5 && degrees < 247.5) {
+    return 'SW';
+  } else if (degrees > 247.5 && degrees < 292.5) {
+    return 'W';
+  } else if (degrees > 292.5 && degrees < 337.5) {
+    return 'NW';
+  }
 };

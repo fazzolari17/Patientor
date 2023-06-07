@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@material-ui/core';
 import { Favorite, Work, MedicalServices } from '@mui/icons-material';
-import { Entry } from '../types';
+import { Entry } from '../types/types';
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   const assertNever = (value: never): never => {

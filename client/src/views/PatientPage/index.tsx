@@ -5,9 +5,9 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 // Types
-import { NewEntry, Patient } from '../../types';
+import { NewEntry, Patient } from '../../types/types';
 import { RootState } from '../../store';
-import { EntryFormValues } from '../../types';
+import { EntryFormValues } from '../../types/types';
 
 // Components / Views
 import PatientDetailsPage from './PatientDetailsPage';

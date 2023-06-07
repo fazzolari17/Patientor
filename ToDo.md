@@ -7,6 +7,13 @@
 
 - fix individual patients page to render the page even after refresh
 
+**************************************************************************
+**************************************************************************
+
+FIX THE REDUCERS TO HAVE ONE SOURCE OF TRUTH THAT GETS CALLED THE SAME FOR EVERYTHING
+
+ START BREAKING UP THE FUNCTIONS SO THAT EACH FUNCTION ONLY DOES {{{ONE JOB}}}
+
 
 
 

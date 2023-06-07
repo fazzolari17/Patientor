@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URI } from '../constants';
-import { Diagnosis } from '../types';
+import { Diagnosis } from '../types/types';
 
 const fetchDiagnosesFromApi = async (token?: string) => {
   let response;

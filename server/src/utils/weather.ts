@@ -1,8 +1,10 @@
+import { HourlyWeatherForecast, findMostFrequent } from './utils';
+
 import {
-  ForecastWeatherData,
-  IndividualForecastData,
-  findMostFrequent,
-} from './utils';
+  IndividualHourlyForecast,
+  IndividualDailyForecastWeather,
+} from '../types';
+import { v4 as uuid } from 'uuid';
 
 const getDayOfWeek = (day: number): string => {
   switch (day) {
@@ -26,16 +28,16 @@ const getDayOfWeek = (day: number): string => {
 };
 
 export const reduceForecastToDailyForecast = (
-  forecast: ForecastWeatherData,
+  forecast: HourlyWeatherForecast,
 ) => {
   interface ForecastObject {
-    0: IndividualForecastData[];
-    1: IndividualForecastData[];
-    2: IndividualForecastData[];
-    3: IndividualForecastData[];
-    4: IndividualForecastData[];
-    5: IndividualForecastData[];
-    6: IndividualForecastData[];
+    0: IndividualHourlyForecast[];
+    1: IndividualHourlyForecast[];
+    2: IndividualHourlyForecast[];
+    3: IndividualHourlyForecast[];
+    4: IndividualHourlyForecast[];
+    5: IndividualHourlyForecast[];
+    6: IndividualHourlyForecast[];
   }
 
   let forecastObject: ForecastObject = {
@@ -60,24 +62,14 @@ export const reduceForecastToDailyForecast = (
   };
 
   const reduceEachKeyIntoSingleObject = () => {
-    interface IndividualReducedForecast {
-      dt: string;
-      main: {
-        temp: number;
-        temp_min: number;
-        temp_max: number;
-        weather: IndividualForecastData['weather'][0];
-      };
-    }
-
     interface ReducedForecastObject {
-      0: IndividualReducedForecast | Record<string, never>;
-      1: IndividualReducedForecast | Record<string, never>;
-      2: IndividualReducedForecast | Record<string, never>;
-      3: IndividualReducedForecast | Record<string, never>;
-      4: IndividualReducedForecast | Record<string, never>;
-      5: IndividualReducedForecast | Record<string, never>;
-      6: IndividualReducedForecast | Record<string, never>;
+      0: IndividualDailyForecastWeather | Record<string, never>;
+      1: IndividualDailyForecastWeather | Record<string, never>;
+      2: IndividualDailyForecastWeather | Record<string, never>;
+      3: IndividualDailyForecastWeather | Record<string, never>;
+      4: IndividualDailyForecastWeather | Record<string, never>;
+      5: IndividualDailyForecastWeather | Record<string, never>;
+      6: IndividualDailyForecastWeather | Record<string, never>;
     }
 
     let reducedForecastObject: ReducedForecastObject = {
@@ -105,11 +97,12 @@ export const reduceForecastToDailyForecast = (
       const lengthOfDay =
         forecastObject[i as keyof typeof forecastObject].length;
       const dt_txt = forecastObject[i as keyof typeof forecastObject][0].dt_txt;
+      const dt = forecastObject[i as keyof typeof forecastObject][0].dt;
 
       const humidityArr: number[] = [];
       const lowArr: number[] = [];
       const highArr: number[] = [];
-      const weatherArr: Array<IndividualForecastData['weather']> = [];
+      const weatherArr: Array<IndividualHourlyForecast['weather']> = [];
 
       forecastObject[i as keyof typeof forecastObject].forEach((day) => {
         humidityArr.push(day.main.humidity);
@@ -121,7 +114,7 @@ export const reduceForecastToDailyForecast = (
       const humidity: number = humidityArr.reduce((a, b) => a + b, 0);
       const temp_min: number = lowArr.sort((a, b) => a - b)[0];
       const temp_max: number = highArr.sort((a, b) => b - a)[0];
-      const weather: IndividualForecastData['weather'][0] =
+      const weather: IndividualHourlyForecast['weather'][0] =
         findMostFrequent(weatherArr);
 
       reducedForecastObject = {
@@ -132,26 +125,43 @@ export const reduceForecastToDailyForecast = (
             temp_max: temp_max.toFixed(),
             humidity: (humidity / lengthOfDay).toFixed(),
           },
-          weather: [weather],
+          weather: weather,
           dt_txt,
+          dt,
           day: getDayOfWeek(i),
           key: i,
+          id: uuid(),
         },
       };
     }
 
-    let result = Object.keys(reducedForecastObject).map((key: unknown) => ({
+    let listArray = Object.keys(reducedForecastObject).map((key: unknown) => ({
       ...reducedForecastObject[key as keyof typeof reducedForecastObject],
     }));
 
-    result = result.filter((item) => {
+    listArray = listArray.filter((item) => {
       if (item.main) {
         return item;
       }
       return;
     });
-    console.log(result);
-    return result;
+
+    return {
+      cod: forecast.cod,
+      message: forecast.message,
+      cnt: forecast.cnt,
+      list: listArray,
+      city: {
+        id: forecast.city.id,
+        name: forecast.city.name,
+        country: forecast.city.country,
+        coord: { lat: forecast.city.coord.lat, lon: forecast.city.coord.lon },
+        population: forecast.city.population,
+        timezone: forecast.city.timezone,
+        sunrise: forecast.city.sunrise,
+        sunset: forecast.city.sunset,
+      },
+    };
   };
 
   consolidateEachDayIntoArray();

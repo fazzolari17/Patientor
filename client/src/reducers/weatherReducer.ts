@@ -6,21 +6,22 @@ import { createSlice } from '@reduxjs/toolkit';
 import weatherService from '../services/weather';
 
 // Utils
-import {
-  // parseForecast,
-  parseLocationData,
-  timeSinceLastWeatherUpdate,
-} from '../utils/utils';
+import { parseLocationData, timeSinceLastWeatherUpdate } from '../utils/utils';
 
 // Types
-import { LocationData, WeatherData } from '../types';
-import { ForecastWeatherData, LocationDataFromApi } from '../utils/utils';
+import {
+  LocationData,
+  WeatherData,
+  HourlyWeatherForecast,
+} from '../types/weather';
+import { LocationDataFromApi } from '../utils/utils';
+import { IndividualDailyForecastWeather } from '../types/weather';
 
 interface WeatherState {
   locationData: LocationData | null;
   currentWeather: WeatherData | null;
-  hourlyForecast: ForecastWeatherData | null;
-  dailyForecast: ForecastWeatherData | null;
+  hourlyForecast: HourlyWeatherForecast | null;
+  dailyForecast: HourlyWeatherForecast | null;
 }
 
 const initialState: WeatherState = {
@@ -41,7 +42,7 @@ const weatherSlice = createSlice({
     addWeatherLocation(state, action) {
       return { ...state, locationData: action.payload };
     },
-    addWeatherData(state, action) {
+    addCurrentWeatherData(state, action) {
       return { ...state, weatherData: action.payload };
     },
     addHourlyForecastData(state, action) {
@@ -78,12 +79,12 @@ export const fetchCurrentWeatherData = (lat: number, lon: number) => {
         const weatherWithTimestamp = { ...response, timestamp: Date.now() };
 
         localStorage.setItem('weather', JSON.stringify(weatherWithTimestamp));
-        dispatch(addWeatherData(weatherWithTimestamp));
+        dispatch(addCurrentWeatherData(weatherWithTimestamp));
       } else {
         const weatherInStorage = localStorage.getItem('weather');
         if (weatherInStorage) {
           const weather = JSON.parse(weatherInStorage);
-          dispatch(addWeatherData(weather));
+          dispatch(addCurrentWeatherData(weather));
         }
       }
     } catch (error) {
@@ -92,25 +93,38 @@ export const fetchCurrentWeatherData = (lat: number, lon: number) => {
   };
 };
 
-export const fetchForecastWeatherData = (lat: number, lon: number) => {
+export const fetchForecastBasedOnTimestamp = (lat: number, lon: number) => {
   return async (dispatch: Dispatch) => {
     try {
       const tenMinutes = 600000;
       if (timeSinceLastWeatherUpdate() > tenMinutes) {
         const hourlyForecast =
-          await weatherService.fetchHourlyForecastWeatherData(lat, lon);
+          await weatherService.fetchHourlyHourlyWeatherForecast(lat, lon);
 
-        const dailyForecast =
-          await weatherService.fetchDailyForecastWeatherData(lat, lon);
+        let dailyForecast =
+          await weatherService.fetchDailyHourlyWeatherForecast(lat, lon);
+
+        dailyForecast = {
+          ...dailyForecast,
+          list: dailyForecast.list.sort(
+            (
+              a: IndividualDailyForecastWeather,
+              b: IndividualDailyForecastWeather
+            ) => {
+              return Number(a.dt) - Number(b.dt);
+            }
+          ),
+        };
 
         const hourlyForecastWithTimestamp = {
-          ...hourlyForecast,
           timestamp: Date.now(),
+          ...hourlyForecast,
         };
 
         const dailyForecastWithTimestamp = {
-          ...dailyForecast,
           timestamp: Date.now(),
+          ...dailyForecast,
+          list: [...dailyForecast.list],
         };
 
         dispatch(addHourlyForecastData(hourlyForecastWithTimestamp));
@@ -142,9 +156,62 @@ export const fetchForecastWeatherData = (lat: number, lon: number) => {
   };
 };
 
+export const fetchForecastRegardlessOfTimestamp = (
+  lat: number,
+  lon: number
+) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const hourlyForecast =
+        await weatherService.fetchHourlyHourlyWeatherForecast(lat, lon);
+
+      const dailyForecast =
+        await weatherService.fetchDailyHourlyWeatherForecast(lat, lon);
+
+      const hourlyForecastWithTimestamp = {
+        timestamp: Date.now(),
+        ...hourlyForecast,
+      };
+
+      const dailyForecastWithTimestamp = {
+        timestamp: Date.now(),
+        ...dailyForecast,
+        list: [...dailyForecast.list],
+      };
+
+      dispatch(addHourlyForecastData(hourlyForecastWithTimestamp));
+      localStorage.setItem(
+        'hourlyForecast',
+        JSON.stringify(hourlyForecastWithTimestamp)
+      );
+
+      dispatch(addDailyForecastData(dailyForecastWithTimestamp));
+      localStorage.setItem(
+        'dailyForecast',
+        JSON.stringify(dailyForecastWithTimestamp)
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const fetchDailyForecast = (lat: number, lon: number) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const dailyForecast =
+        await weatherService.fetchDailyHourlyWeatherForecast(lat, lon);
+
+      dispatch(addDailyForecastData(dailyForecast));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
 export const {
   addWeatherLocation,
-  addWeatherData,
+  addCurrentWeatherData,
   addHourlyForecastData,
   addDailyForecastData,
   resetWeather,

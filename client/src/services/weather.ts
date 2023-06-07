@@ -16,7 +16,7 @@ const fetchCurrentWeatherDataFromApi = async (lat: number, lon: number) => {
   return response.data;
 };
 
-const fetchHourlyForecastWeatherData = async (lat: number, lon: number) => {
+const fetchHourlyHourlyWeatherForecast = async (lat: number, lon: number) => {
   const days = 100;
   try {
     const response = await axios.get(
@@ -28,7 +28,7 @@ const fetchHourlyForecastWeatherData = async (lat: number, lon: number) => {
   }
 };
 
-const fetchDailyForecastWeatherData = async (lat: number, lon: number) => {
+const fetchDailyHourlyWeatherForecast = async (lat: number, lon: number) => {
   const days = 100;
   try {
     const response = await axios.get(
@@ -43,6 +43,6 @@ const fetchDailyForecastWeatherData = async (lat: number, lon: number) => {
 export default {
   fetchLatandLonFromApi,
   fetchCurrentWeatherDataFromApi,
-  fetchHourlyForecastWeatherData,
-  fetchDailyForecastWeatherData,
+  fetchHourlyHourlyWeatherForecast,
+  fetchDailyHourlyWeatherForecast,
 };

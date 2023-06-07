@@ -2,7 +2,7 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 
 // Types
-import { NewEntry, Patient } from '../types';
+import { NewEntry, Patient } from '../types/types';
 
 // Services
 import patientService from '../services/patients';

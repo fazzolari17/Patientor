@@ -1,11 +1,13 @@
 import axios from 'axios';
 import {
   ForecastResponseFromApi,
-  ForecastWeatherData,
+  HourlyWeatherForecast,
   parseForecast,
   parseGeoCodeResponse,
+  parseReverseGeocode,
   parseWeatherDataResponse,
   ResponseData,
+  ReverseGeocodeResponse,
   WeatherData,
 } from '../utils/utils';
 
@@ -20,6 +22,20 @@ export interface GeoCodeData {
   state: string;
   id: string;
 }
+
+const fetchCityDataFromApi = async (lat: unknown, lon: unknown) => {
+  const limit = 100;
+  try {
+    const response = await axios.get(
+      `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=${limit}&appid=${OPENWEATHER_API_KEY}`,
+    );
+
+    return parseReverseGeocode(response.data[0] as ReverseGeocodeResponse);
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+};
 
 const fetchLatandLonFromApi = async (
   searchQuery: unknown,
@@ -52,11 +68,11 @@ const fetchCurrentWeatherDataFromApi = async (
   }
 };
 
-const fetchForecastWeatherDataFromApi = async (
+const fetchForecastBasedOnTimestampFromApi = async (
   latitude: unknown,
   longitude: unknown,
   forecastLength: unknown,
-): Promise<ForecastWeatherData | undefined> => {
+): Promise<HourlyWeatherForecast | undefined> => {
   try {
     const response = await axios.get(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&cnt=${forecastLength}&appid=${OPENWEATHER_API_KEY}&units=${weatherUnits}`,
@@ -74,6 +90,7 @@ const fetchForecastWeatherDataFromApi = async (
 
 export default {
   fetchLatandLonFromApi,
+  fetchCityDataFromApi,
   fetchCurrentWeatherDataFromApi,
-  fetchForecastWeatherDataFromApi,
+  fetchForecastBasedOnTimestampFromApi,
 };

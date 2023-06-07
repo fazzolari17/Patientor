@@ -3,7 +3,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
 // Types
-import { Diagnosis } from '../types';
+import { Diagnosis } from '../types/types';
 
 // Services
 import diagnosesService from '../services/diagnoses';

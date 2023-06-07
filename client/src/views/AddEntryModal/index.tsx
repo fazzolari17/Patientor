@@ -12,7 +12,7 @@ import {
 import { Alert } from '@material-ui/lab';
 
 // Types
-import { EntryFormValues } from '../../types';
+import { EntryFormValues } from '../../types/types';
 
 // Form Components / Views
 import HospitalEntryForm from './HospitalEntryForm';

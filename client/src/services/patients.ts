@@ -4,7 +4,7 @@ import axios from 'axios';
 import { API_BASE_URI } from '../constants';
 
 // Types
-import { Entry, NewEntry, Patient } from '../types';
+import { Entry, NewEntry, Patient } from '../types/types';
 import { PatientFormValues } from '../views/AddPatientModal/AddPatientForm';
 
 const fetchAllPatients = async (token?: string) => {

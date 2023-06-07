@@ -18,7 +18,7 @@ import EntryDetails from '../../components/EntryDetails';
 
 // Types
 import { RootState } from '../../store';
-import { Diagnosis, Entry, Patient } from '../../types';
+import { Diagnosis, Entry, Patient } from '../../types/types';
 
 interface IProps {
   id: string;

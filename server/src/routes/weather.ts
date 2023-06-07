@@ -11,16 +11,30 @@ weatherRouter.get('/dailyforecast', (async (req: Request, res: Response) => {
     const lonSearchQuery = req.query.lon;
     const forecastLength = req.query.days;
 
-    const forecast = await weatherService.fetchForecastWeatherDataFromApi(
+    const forecast = await weatherService.fetchForecastBasedOnTimestampFromApi(
       latSearchQuery,
       lonSearchQuery,
       forecastLength,
     );
+
+    const cityData = await weatherService.fetchCityDataFromApi(
+      latSearchQuery,
+      lonSearchQuery,
+    );
+
     if (!forecast) throw new Error('missing or undefined forecast');
+    if (!cityData) throw new Error('missing or undefined cityData');
 
     const dailyForecast = reduceForecastToDailyForecast(forecast);
+    const dailyForecastWithState = {
+      ...dailyForecast,
+      city: {
+        ...dailyForecast.city,
+        state: cityData.state,
+      },
+    };
 
-    res.status(200).send(dailyForecast);
+    res.status(200).send(dailyForecastWithState);
   } catch (error) {
     console.error(error);
   }
@@ -32,7 +46,7 @@ weatherRouter.get('/forecast', (async (req: Request, res: Response) => {
     const lonSearchQuery = req.query.lon;
     const forecastLength = req.query.days;
 
-    const forecast = await weatherService.fetchForecastWeatherDataFromApi(
+    const forecast = await weatherService.fetchForecastBasedOnTimestampFromApi(
       latSearchQuery,
       lonSearchQuery,
       forecastLength,

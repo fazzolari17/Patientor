@@ -19,7 +19,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { parseString } from '../../utils/utils';
 
 // Types
-import { ILoginCredentials } from '../../types';
+import { ILoginCredentials } from '../../types/types';
 
 interface SignInProps {
   handleLogin: (arg0: ILoginCredentials) => Promise<void>;

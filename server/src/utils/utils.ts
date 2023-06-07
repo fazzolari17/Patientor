@@ -217,6 +217,42 @@ export default {
   toNewEntry,
 };
 
+// =========================================================================
+// ============================= Weather ===================================
+// =========================================================================
+
+export interface ReverseGeocodeResponse {
+  name: unknown;
+  lat: unknown;
+  lon: unknown;
+  country: unknown;
+  state: unknown;
+}
+
+export interface ReverseGeocode {
+  name: string;
+  lat: number;
+  lon: number;
+  country: string;
+  state: string;
+}
+
+export const parseReverseGeocode = ({
+  name,
+  lat,
+  lon,
+  state,
+  country,
+}: ReverseGeocodeResponse): ReverseGeocode => {
+  return {
+    name: parseString(`missing or incorrect name`, name),
+    lat: parseNumber(`missing or incorrect lat`, lat),
+    lon: parseNumber(`missing or incorrect lon`, lon),
+    state: parseString(`missing or incorrect state`, state),
+    country: parseString(`missing or incorrect country`, country),
+  };
+};
+
 export interface ResponseData {
   name: unknown;
   lat: unknown;
@@ -471,11 +507,11 @@ export interface ForecastResponseFromApi {
   };
 }
 
-export interface ForecastWeatherData {
+export interface HourlyWeatherForecast {
   cod: string;
   message: number;
   cnt: number;
-  list: IndividualForecastData[];
+  list: IndividualHourlyForecast[];
   city: {
     id: number;
     name: string;
@@ -528,7 +564,7 @@ interface IndividualForecastFromApi {
   dt_txt: unknown;
 }
 
-export interface IndividualForecastData {
+export interface IndividualHourlyForecast {
   dt: number;
   main: {
     temp: number;
@@ -567,7 +603,7 @@ export interface IndividualForecastData {
 
 const parseIndividualForecastDay = (
   props: IndividualForecastFromApi,
-): IndividualForecastData => {
+): IndividualHourlyForecast => {
   return {
     dt: parseNumber('missing or incorrect dt', props.dt),
     main: {
@@ -641,13 +677,13 @@ const parseIndividualForecastDay = (
 
 export const parseForecast = (
   props: ForecastResponseFromApi,
-): ForecastWeatherData => {
+): HourlyWeatherForecast => {
   return {
     cod: parseString('missing or incorrect cod', props.cod),
     message: parseNumber('missing or incorrect message', props.message),
     cnt: parseNumber('missing or incorrect cnt', props.cnt),
     list: props.list.map(
-      (listItem: IndividualForecastFromApi): IndividualForecastData =>
+      (listItem: IndividualForecastFromApi): IndividualHourlyForecast =>
         parseIndividualForecastDay(listItem),
     ),
     city: {
@@ -693,8 +729,8 @@ export function mostFrequentElemenInArray<Type>(arr: Type[]) {
 }
 
 export const findMostFrequent = (
-  arr: IndividualForecastData['weather'][],
-): IndividualForecastData['weather'][0] => {
+  arr: IndividualHourlyForecast['weather'][],
+): IndividualHourlyForecast['weather'][0] => {
   const tempArr: number[] = [];
   const flattenedArr = arr.flat();
 

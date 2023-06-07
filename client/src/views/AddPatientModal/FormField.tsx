@@ -16,7 +16,7 @@ import { InputLabel } from '@material-ui/core';
 import Input from '@material-ui/core/Input';
 
 // Types
-import { Diagnosis, Gender } from '../../types';
+import { Diagnosis, Gender } from '../../types/types';
 
 // structure of a single option
 export type GenderOption = {

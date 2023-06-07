@@ -29,9 +29,11 @@ import Copyright from '../../components/Copyright';
 
 // Redux
 import { useSelector } from 'react-redux';
+import MenuListComposition from '../../components/MenuList';
 
 // Types
 import { RootState } from '../../store';
+import { Button } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -114,31 +116,35 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
   );
 
   const renderTopMenuLoginOrLogoutButton = isLoggedIn ? (
-    <IconButton
-      color="default"
-      aria-label="logut"
-      onClick={() => handleLogout()}
-      style={{ marginLeft: 'auto' }}
-      sx={{ mr: 2, ...(open && { display: 'none' }) }}
-    >
-      {uppercase('logout')}
-    </IconButton>
+    <MenuListComposition
+      title={uppercase('account')}
+      // style={{ marginLeft: 'auto' }}
+    />
   ) : (
-    <IconButton
-      color="default"
-      aria-label="login"
+    <Button
+      style={{
+        fontSize: '1rem',
+        // color: 'white'
+      }}
+      color={'inherit'}
+      id="demo-positioned-button"
+      aria-controls={open ? 'demo-positioned-menu' : undefined}
+      aria-haspopup="true"
+      aria-expanded={open ? 'true' : undefined}
       onClick={() => navigate('login')}
-      style={{ marginLeft: 'auto' }}
-      sx={{ mr: 2, ...(open && { display: 'none' }) }}
     >
-      {uppercase('login')}
-    </IconButton>
+      {'login'}
+    </Button>
   );
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar
+        position="fixed"
+        open={open}
+        // style={{ backgroundColor: '#1976d2' }}
+      >
         <Toolbar>
           <div>
             <IconButton
@@ -146,17 +152,24 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
-              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+              // sx={{ mr: 2, ...(open && { display: 'none' }) }}
             >
               <MenuIcon />
             </IconButton>
           </div>
           {/* Right Side of top App Bar */}
-          <div style={{ marginLeft: 'auto' }}>
+          <div
+            style={{
+              marginLeft: 'auto',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
             {/* wire up funcitonality when the menu button is working correctly, should add a name and user menu */}
             {isLoggedIn ? (
               <IconButton
-                color="default"
+                color="inherit"
                 aria-label="weather"
                 onClick={() => navigate('/weather')}
                 sx={{ mr: 2, ...(open && { display: 'none' }) }}
@@ -175,12 +188,26 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
                       justifyContent: 'center',
                     }}
                   >
-                    <img
-                      style={{ width: '40px' }}
-                      src={`http://openweathermap.org/img/wn/${weather.weatherData?.weather[0].icon}@2x.png`}
-                      alt="weather icon"
-                    />
-                    {`${weather.weatherData?.main.temp.toFixed()}°${tempatureScale}`}
+                    {/* will rener a icon even if there is an error from the api and prevent the page from crashing */}
+                    {weather.weatherData?.weather ? (
+                      <img
+                        style={{ width: '40px' }}
+                        src={`http://openweathermap.org/img/wn/${weather.weatherData?.weather[0].icon}@2x.png`}
+                        alt="weather icon"
+                      />
+                    ) : (
+                      <img
+                        style={{ width: '40px' }}
+                        src={`http://openweathermap.org/img/wn/10d@2x.png`}
+                        alt="weather icon"
+                      />
+                    )}
+                    {/* fix this to a more elegant solution it fixes the page not loading if there is an error retrieving weather data from the api */}
+                    {`${
+                      weather.weatherData?.main
+                        ? weather.weatherData?.main.temp.toFixed()
+                        : '0'
+                    }°${tempatureScale}`}
                   </div>
                   <div style={{ fontSize: '.75rem' }}>
                     {weather.weatherData?.name}
@@ -261,6 +288,7 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
         style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
       >
         <DrawerHeader />
+        {/* {console.log(children)} */}
         {children}
         <div style={{ marginTop: 'auto' }}>
           <Copyright />

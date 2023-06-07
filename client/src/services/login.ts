@@ -5,7 +5,7 @@ import history from '../router/history';
 import { API_BASE_URI } from '../constants';
 
 // Types
-import { ILoginCredentials } from '../types';
+import { ILoginCredentials } from '../types/types';
 
 const login = async (credentials: ILoginCredentials) => {
   try {

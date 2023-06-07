@@ -4,7 +4,7 @@ import axios from 'axios';
 import { API_BASE_URI } from '../constants';
 
 // Types
-import { LocationData } from '../types';
+import { LocationData } from '../types/weather';
 
 const fetchUserDataFromServer = async (userId: string) => {
   try {

@@ -1,3 +1,4 @@
+import './App.css';
 import './services/interceptors';
 import React from 'react';
 import axios from 'axios';
@@ -16,16 +17,16 @@ import { useAppDispatch } from './store';
 import {
   addHourlyForecastData,
   addDailyForecastData,
-  addWeatherData,
+  addCurrentWeatherData,
   fetchCurrentWeatherData,
-  fetchForecastWeatherData,
+  fetchForecastBasedOnTimestamp,
 } from './reducers/weatherReducer';
 import { setUser, login, logout } from './reducers/userReducer';
 import { fetchPatientList, setAllPatients } from './reducers/patientReducer';
 import { setIsLoggedIn } from './reducers/authReducer';
 
 // Types
-import { ILoginCredentials } from './types';
+import { ILoginCredentials } from './types/types';
 
 // Components / Views
 import Menu from './views/Menu';
@@ -88,7 +89,7 @@ const App = () => {
           )
         );
         dispatch(
-          fetchForecastWeatherData(
+          fetchForecastBasedOnTimestamp(
             user.weatherLocationData.lat,
             user.weatherLocationData.lon
           )
@@ -96,7 +97,7 @@ const App = () => {
 
         if (weatherInLocalStorage) {
           const weather = JSON.parse(weatherInLocalStorage);
-          dispatch(addWeatherData(weather));
+          dispatch(addCurrentWeatherData(weather));
         }
 
         if (hourlyForecastInLocalStorage) {
@@ -133,9 +134,9 @@ const App = () => {
     await dispatch(login(userToLogin));
   };
 
-  function handleLogout() {
+  const handleLogout = () => {
     dispatch(logout('home'));
-  }
+  };
 
   return (
     <Menu handleLogout={handleLogout} isLoggedIn={isLoggedIn}>
@@ -154,6 +155,8 @@ const App = () => {
               element={<HomePage isLoggedIn={isLoggedIn} />}
             />
 
+            {/* <Route path={'/weather/:id'} element={<WeatherPage />} /> */}
+            <Route path={'/weather'} element={<WeatherPage />} />
             <Route path={'/weather'} element={<WeatherPage />} />
             <Route path={'/patients'} element={<PatientListPage />} />
             <Route path={'/patients/:id'} element={<PatientPage />} />
