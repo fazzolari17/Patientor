@@ -23,7 +23,6 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.2.1",
     "redux": "^4.2.1",
-    "styled-components": "^5.3.6",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -38,14 +37,14 @@
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "eslint-config-react": "^1.1.7",
-    "prettier": "2.8.4",
+    "husky": "^5.2.0",
+    "prettier": "3.0.0",
     "react-scripts": "^5.0.0",
-    "typescript": "^4.5.5",
-    "husky": "^5.2.0"
+    "typescript": "^4.5.5"
   },
   "scripts": {
     "start": "NODE_ENV=production react-scripts start",
-    "dev": "NODE_ENV=development react-scripts start",
+    "dev": "REACT_APP_REACT_ENV=development react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

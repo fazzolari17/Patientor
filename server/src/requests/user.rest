@@ -1,18 +1,20 @@
-@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2ODYxODA1OTAsImV4cCI6MTY4NjI2Njk5MH0.XRKvp0rfln_pMkVAFQ9KsMKJruayG9bi4wLJqjei4pc
-@userId=63f0593b412273dc48613063
-@PORT=3001
+@token=bearer {{loginLocal.response.body.auth.token}}
+@userId={{loginLocal.response.body.user.id}}
+@port={{$dotenv PORT}}
+@uri={{$dotenv LOCAL_HOST}}
+@url={{uri}}{{port}}
 
 #####################################
 ### Request to Development Server ###
 #####################################
 
 # Health Route 
-GET https://localhost:{{PORT}}/api/health
+GET {{url}}/api/health
 
 
 ###
 # Get all users Route 
-GET http://localhost:{{PORT}}/api/user/allUsers
+GET {{url}}/api/user/allUsers
 Authorization: {{token}}
 Content-Type: application/json
 
@@ -23,7 +25,7 @@ Content-Type: application/json
 
 # Sign Up Route
 ###
-POST http://localhost:{{PORT}}/api/signup
+POST {{url}}/api/signup
 Content-Type: application/json
 
 {
@@ -35,7 +37,8 @@ Content-Type: application/json
 
 # Login Routes
 ###
-POST http://localhost:{{PORT}}/api/login
+# @name loginLocal
+POST {{url}}/api/login
 Content-Type: application/json
 
 {
@@ -45,7 +48,7 @@ Content-Type: application/json
 
 # Update User Weather Location Data
 ###
-Post http://localhost:{{PORT}}/api/user/addweather?userId={{userId}}
+Post {{url}}/api/user/addweather?userId={{userId}}
 Authorization: {{token}}
 Content-Type: application/json
 

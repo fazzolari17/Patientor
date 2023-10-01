@@ -1,3 +1,14 @@
-build
+# Dependencies
 node_modules
+
+
+dist/*
+src/dist/loaders
+src/dist
+
+# Hidden
 .github
+.git
+
+# Build
+build

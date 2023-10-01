@@ -6,6 +6,7 @@ export interface ILoggedInUser {
   id: string | null;
   email: string | null;
   weatherLocationData: ApiGeocodeResults | null;
+  loginError: null;
 }
 
 export interface ILoginCredentials {

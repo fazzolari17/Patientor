@@ -1,0 +1,23 @@
+.login-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  max-width: 100%;
+  min-width: none;
+  height: auto !important;
+  transform: all .5s ease-in-out;
+  -webkit-transform: all .5s ease-in-out;
+  -moz-transform: all .5s ease-in-out;
+}
+
+.button.button-clicked {
+  width: 0 !important;
+  border-radius: 50%;
+  padding: 3px;
+  margin: 0;
+  min-width: fit-content;
+  transition: all .2s ease-in-out;
+}

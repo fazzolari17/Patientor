@@ -18,15 +18,16 @@ const login = async (credentials: ILoginCredentials) => {
     const message = data.error;
 
     if (status === UNAUTHORIZED) {
-      alert(message);
-      history.replace('/login');
-      return;
+      // alert(message);
+      // history.replace('/login');
+      // console.log(error.response)
+      return { error: message };
     } else if (status === BAD_REQUEST) {
       alert(message);
       history.replace('/signup');
       return;
     }
-    return;
+    // return;
   }
 };
 

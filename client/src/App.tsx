@@ -47,7 +47,7 @@ import { RootState } from './store';
 
 const App = () => {
   const {
-    auth: { isLoggedIn },
+    auth: { isLoggedIn }
   } = useSelector((state: RootState) => state);
 
   const dispatch = useAppDispatch();
@@ -131,7 +131,12 @@ const App = () => {
   };
 
   const handleLogin = async (userToLogin: ILoginCredentials): Promise<void> => {
-    await dispatch(login(userToLogin));
+    try {
+      await dispatch(login(userToLogin));
+      
+    } catch (error) {
+      console.error('handle login error:', error.response);
+    }
   };
 
   const handleLogout = () => {

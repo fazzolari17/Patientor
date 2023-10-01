@@ -30,6 +30,7 @@ const initialState: ILoggedInUser = {
   email: null,
   id: null,
   weatherLocationData: null,
+  loginError: null,
 };
 
 const userFromStorage = localStorage.getItem('loggedInUser');
@@ -45,8 +46,19 @@ const userSlice = createSlice({
       return (state = action.payload);
     },
     resetUser: () => initialState,
+    setLoginError(state, action) {
+      return { ...state, loginError: action.payload };
+    }
   },
 });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const loginError = (response: any) => {
+  console.log('loginError', response.error);
+  return (dispatch: Dispatch) => {
+    dispatch(setLoginError(response.error))
+  }
+}
 
 export const logout = (navigateTo: string) => {
   return (dispatch: Dispatch) => {
@@ -73,41 +85,54 @@ export const logout = (navigateTo: string) => {
 
 export const login = (credentials: ILoginCredentials) => {
   return async (dispatch: Dispatch) => {
-    const response = await loginService.login(credentials);
-    const token = response.auth.token;
-    const lat = response.user.weatherLocationData.lat;
-    const lon = response.user.weatherLocationData.lon;
+    try {
+      const response = await loginService.login(credentials);
 
-    if (response === undefined) {
-      // Prune Tree if response is undefined
-      return;
-    } else if (token) {
-      // Set token in auth slice and set user in user slice
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const { error } = response
+      if (error === 'incorrect password') {
+        dispatch(setLoginError(error));
+        return;
+      }
+      const token = response.auth.token;
+      const lat = response.user.weatherLocationData.lat;
+      const lon = response.user.weatherLocationData.lon;
 
-      // Set User into state if token is returned
-      dispatch(setUser(response.user));
-      localStorage.setItem('loggedInUser', JSON.stringify(response.user));
-
-      dispatch(setToken(response.auth));
-      localStorage.setItem('authorization', JSON.stringify(response.auth));
-
-      dispatch(setIsLoggedIn(true));
-
-      const patientsDispatch = fetchPatientList(token);
-      patientsDispatch(dispatch);
-
-      const diagnosesDispatch = getAllDiagnoses(token);
-      diagnosesDispatch(dispatch);
-
-      const currentWeatherDispatch = fetchCurrentWeatherData(lat, lon);
-      currentWeatherDispatch(dispatch);
-
-      const forecastWeatherDispatch = fetchForecastBasedOnTimestamp(lat, lon);
-      forecastWeatherDispatch(dispatch);
-
-      // Navigate after logging in
-      history.replace('/home');
+      // if (response === undefined) {
+      //   console.error('login if statement ran')
+      //   // Prune Tree if response is undefined
+      //   // return dispatch(setLoginError(response));
+      // } else 
+      if (token) {
+        // Set token in auth slice and set user in user slice
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  
+        // Set User into state if token is returned
+        dispatch(setUser(response.user));
+        localStorage.setItem('loggedInUser', JSON.stringify(response.user));
+  
+        dispatch(setToken(response.auth));
+        localStorage.setItem('authorization', JSON.stringify(response.auth));
+  
+        dispatch(setIsLoggedIn(true));
+  
+        const patientsDispatch = fetchPatientList(token);
+        patientsDispatch(dispatch);
+  
+        const diagnosesDispatch = getAllDiagnoses(token);
+        diagnosesDispatch(dispatch);
+  
+        const currentWeatherDispatch = fetchCurrentWeatherData(lat, lon);
+        currentWeatherDispatch(dispatch);
+  
+        const forecastWeatherDispatch = fetchForecastBasedOnTimestamp(lat, lon);
+        forecastWeatherDispatch(dispatch);
+  
+        // Navigate after logging in
+        history.replace('/home');
+      }
+    } catch (error) {
+      console.error('login user reducer:', error);
+      dispatch(setLoginError(error));
     }
   };
 };
@@ -130,5 +155,5 @@ export const updateUserWeatherLocationData = (
   };
 };
 
-export const { setUser, updateUser, resetUser } = userSlice.actions;
+export const { setUser, updateUser, resetUser, setLoginError } = userSlice.actions;
 export default userSlice.reducer;

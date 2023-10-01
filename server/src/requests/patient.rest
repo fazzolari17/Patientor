@@ -1,8 +1,18 @@
-@PORT= 3001
-@token=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvb3RAZ21haWwuY29tIiwiaWQiOiI2M2YwNTkzYjQxMjI3M2RjNDg2MTMwNjMiLCJpYXQiOjE2Nzc0MjE2NjEsImV4cCI6MTY3NzUwODA2MX0.Iu_8AaSLN-t-OgsWkBYZnPfDSvmQT7SGlLh1QIaZm1E
-
+@PORT={{$dotenv PORT}}
+@token=bearer {{login.response.body.auth.token}}
 # This needs to be the patient id and not the user's id!
 @id=63f59293ab81d6526c015236
+
+# Login Routes
+###
+# @name login
+POST http://localhost:{{PORT}}/api/login
+Content-Type: application/json
+
+{
+  "email": "root@gmail.com",
+  "password": "password"
+}
 
 # Get all patients
 GET http://localhost:{{PORT}}/api/patients

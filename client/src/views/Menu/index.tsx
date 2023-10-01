@@ -192,13 +192,13 @@ const Menu = ({ children, isLoggedIn, handleLogout }: IDrawerProps) => {
                     {weather.weatherData?.weather ? (
                       <img
                         style={{ width: '40px' }}
-                        src={`http://openweathermap.org/img/wn/${weather.weatherData?.weather[0].icon}@2x.png`}
+                        src={`https://openweathermap.org/img/wn/${weather.weatherData?.weather[0].icon}@2x.png`}
                         alt="weather icon"
                       />
                     ) : (
                       <img
                         style={{ width: '40px' }}
-                        src={`http://openweathermap.org/img/wn/10d@2x.png`}
+                        src={`https://openweathermap.org/img/wn/10d@2x.png`}
                         alt="weather icon"
                       />
                     )}

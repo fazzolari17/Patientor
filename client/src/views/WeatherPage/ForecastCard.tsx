@@ -87,7 +87,7 @@ const ForecastCard = ({
             {`${day.day} ${day.dt_txt.slice(5).substring(3, 5)}`}
           </p>
           <img
-            src={`http://openweathermap.org/img/wn/${day.weather.icon}@2x.png`}
+            src={`https://openweathermap.org/img/wn/${day.weather.icon}@2x.png`}
             alt="weather icon"
           />
           <p>{`${day.main.temp_min}° / ${day.main.temp_max}°`}</p>

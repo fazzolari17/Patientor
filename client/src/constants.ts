@@ -2,7 +2,13 @@ const PORT = process.env.port || 3001;
 // const productionPORT = process.env.PORT || 10000;
 const production = `https://patientor-server-docker.onrender.com`;
 const local = `http://localhost:${PORT}`;
+let url;
+const REACT_ENV = process.env.REACT_APP_REACT_ENV;
 
-const url = process.env.NODE_ENV === 'production' ? production : local;
+if(REACT_ENV !== undefined) {
+  url = REACT_ENV === 'development' ? production : local;
+} else {
+  url = process.env.NODE_ENV === 'production' ? production : local;
+}
 
 export const API_BASE_URI = `${url}/api`;
