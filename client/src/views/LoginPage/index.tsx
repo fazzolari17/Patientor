@@ -46,7 +46,7 @@ const loadingSpinner = <AdvancedSpinner />
 export default function SignIn({ handleLogin }: SignInProps) {
   const [checkbox, setCheckbox] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [buttonClass, setButtonClass] = React.useState<'button-clicked' | 'button'>('button-clicked');
+  const [buttonClass, setButtonClass] = React.useState<'button-clicked' | 'not-clicked'>('button-clicked');
 
   const {
     user: { loginError },
@@ -85,7 +85,7 @@ export default function SignIn({ handleLogin }: SignInProps) {
   const clearErrorAndResetLoginState = () => {
     dispatch(resetUser())
     setIsLoading(false)
-    setButtonClass('button')
+    setButtonClass('not-clicked')
   }
 
   return (
@@ -153,8 +153,9 @@ export default function SignIn({ handleLogin }: SignInProps) {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                // sx={{ mt: 3, mb: 2 }}
                 disableRipple
+                disabled={loginError ? true : false}
               >
                 { isLoading && !loginError ? loadingSpinner : 'Sign In' }
               </Button>

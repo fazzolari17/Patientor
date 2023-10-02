@@ -6,7 +6,7 @@ let url;
 const REACT_ENV = process.env.REACT_APP_REACT_ENV;
 
 if(REACT_ENV !== undefined) {
-  url = REACT_ENV === 'development' ? production : local;
+  url = REACT_ENV === 'development' ? local : production;
 } else {
   url = process.env.NODE_ENV === 'production' ? production : local;
 }
